@@ -4,14 +4,14 @@
   "description": "Reproductor Musical elaborado con Node js, y MySql",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FranzFlores/ReproductorMusical.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Reproductor"],
+  "author": "Franz Flores, Alberto Ortega, Luis Villalta",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/FranzFlores/ReproductorMusical/issues"
