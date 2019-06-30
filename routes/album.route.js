@@ -2,10 +2,11 @@
 
 var express = require('express');
 var router = express.Router();
-var albumController = require('../controllers/album');
-const { isLoggedIn } = require('../lib/auth');
 var multipart = require('connect-multiparty');
-var md_upload = multipart({uploadDir: './uploads/albums'});
+
+const albumController = require('../controllers/album.controller');
+const { isLoggedIn } = require('../lib/auth');
+const md_upload = multipart({uploadDir: './uploads/albums'});
 
 router.get('/albums',isLoggedIn,albumController.getAlbums);
 router.get('/album/:external',isLoggedIn,albumController.getAlbum);

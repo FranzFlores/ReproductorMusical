@@ -4,7 +4,7 @@ var morgan = require('morgan');
 var path = require('path');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
-var exphbs = require('express-handlebars');
+//var exphbs = require('express-handlebars');
 var session = require('express-session');
 var flash = require('connect-flash');
 const passport = require('passport');
@@ -18,15 +18,15 @@ require('./lib/passport')(passport,User,Role);
 //Configuraciones
 app.set('port',process.env.PORT||4000);
 
-app.set('views', path.join(__dirname, 'views'));
-app.engine('hbs',exphbs({
-    defaultLayout: 'main',
-    layoutsDir: path.join(app.get('views'),'layouts'),
-    partialsDir: path.join(app.get('views'),'partials'),
-    extname: '.hbs', 
-    helpers: require('./lib/handlebars').helpers
-}))
-app.set('view engine','hbs');
+// app.set('views', path.join(__dirname, 'views'));
+// app.engine('hbs',exphbs({
+//     defaultLayout: 'main',
+//     layoutsDir: path.join(app.get('views'),'layouts'),
+//     partialsDir: path.join(app.get('views'),'partials'),
+//     extname: '.hbs', 
+//     helpers: require('./lib/handlebars').helpers
+// }))
+// app.set('view engine','hbs');
 
 //Middlewares
 app.use(cors());
@@ -56,11 +56,11 @@ app.use((req, res, next) => {
 
 //Rutas
 app.use(require('./routes/index'));
-app.use('/api',require('./routes/report'));
-app.use('/api',require('./routes/album'));
-app.use('/api',require('./routes/artist'));
-app.use('/api',require('./routes/playList'));
-app.use('/api',require('./routes/song'));
+app.use('/user',require('./routes/user.route'))
+app.use('/album',require('./routes/album.route'));
+app.use('/artist',require('./routes/artist.route'));
+// app.use('/playlist',require('./routes/playlist.route'));
+// app.use('/song',require('./routes/song.route'));
 
 //Public 
 app.use(express.static(path.join(__dirname, 'public')));

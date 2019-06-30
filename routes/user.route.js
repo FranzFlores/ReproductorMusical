@@ -16,7 +16,7 @@ router.get('/get-image-user/:imageFile', userController.getImageFile);
 
 
 //Para la aplicacion movil
-router.post('/login',userController.login);
+// router.post('/login',userController.login);
 
 module.exports = router;
 
