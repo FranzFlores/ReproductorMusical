@@ -5,6 +5,11 @@ var passport = require('passport');
 
 const { isLoggedIn } = require('../lib/auth');
 
+//Pagina de Inicio
+router.get('/',(req,res)=>{
+    res.render('index');
+});
+
 //Registro de Usuario
 router.get('/signup', (req, res) => {
     res.render('auth/signup');
