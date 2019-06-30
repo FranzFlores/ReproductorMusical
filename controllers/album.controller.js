@@ -27,7 +27,7 @@ const AlbumController = {};
  *         artistId::48d0a02df461f0519b1c
  *      }
  * 
- * @apiSuccess {flashNotification} pop up 'Se ha guardado correctamente el artista'
+ * @apiSuccess {flashNotification} pop up 'Se ha guardado correctamente el album'
  * 
  */
 AlbumController.saveAlbum = (req, res) => {
@@ -232,7 +232,7 @@ AlbumController.uploadImage = (req, res) => {
     }
 };
 /**
- * @api {get} /album/get-image-album/:imageFile Obtiene la foto de perfil del album.
+ * @api {get} /album/get-image-album/:imageFile Obtiene la foto  del album.
  * @apiName getImageFile
  * @apiGroup Album
  * @apiDescription El método obtiene del servidor la imagen que se encuentra en la base de datos del album.
@@ -259,4 +259,4 @@ AlbumController.getImageFile = (req, res) => {
     });
 };
 
-module.exports = AlbumController; a
+module.exports = AlbumController; 

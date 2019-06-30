@@ -44,6 +44,24 @@ ArtistController.saveArtist = (req, res) => {
     });
   };
 
+/**
+ * @api {get} /artist/artist/:external obtención de un artista por su atributo external id
+ * @apiName getArtist
+ * @apiGroup Artist
+ * @apiDescription El método obtiene un artitas mediante su external id
+ * 
+ * 
+ * @apiSuccess {json} artist objeto obtenido del modelo artista
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ *
+ *     {
+ * name: "Nombre Artista 1"
+ * description: "Descripcion Artista 1"
+ *     }
+ *
+ * 
+ */
 ArtistController.getArtist = (req, res) => {
   Artist.findOne({
     where: { external_id: req.params.external },
@@ -124,8 +142,26 @@ ArtistController.updateArtist = (req, res) => {
     });
 };
 
+/**
+ * @api {post} /artist/deleteArtist/:external  dar dabaja a un artista 
+ * @apiName deleteArtist
+ * @apiGroup Artist
+ * @apiDescription El método actualiza el estado del artista en la base de datos
+ * 
+ * @apiParam {String}           external          Atributo external_id único del usuario.Se obtiene por la URL 
+ * @apiParam {String}           artist            id del artista. se obtiene mediante el cuerpo de la petición
+ * 
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *        external:48d0a02df461f0519b1c,
+ *        artist:1
+ *      }
+ * 
+ * 
+ * @apiSuccess {flashNotification} popup "Se ha eliminado correctamente"
+ * 
+ */
 
-//mètodo para dar de baja los artist(artista) en la base de datos, requiere el external id por parametro
 ArtistController.deleteArtist = (req, res) => {
 //Actualizar artist(artista)
   Artist.update({ status: false }, { where: { external_id: req.params.external } })
