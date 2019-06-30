@@ -84,7 +84,25 @@ AlbumController.getAlbums = (req, res) => {
         res.status(500).send({ message: 'Error en la peticion' });
     });
 };
-//mètodo para obtener un solo registro de la tabla album en la base de datos, requiere el external id por parametro
+/**
+ * @api {get} /artist/album/:external obtención de un album por su atributo external id
+ * @apiName getAlbum
+ * @apiGroup Album
+ * @apiDescription El método obtiene un album mediante su external id
+ * 
+ * 
+ * @apiSuccess {json} album objeto obtenido del modelo album
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ *
+ *     {
+ *         name: "Nombre album ",
+ *         description:"Descripción album ",
+ *         year:"Año de publicación ",
+ *     }
+ *
+ * 
+ */
 AlbumController.getAlbum = (req, res) => {
     Album.findOne({
         where: { external_id: req.params.external },
@@ -138,7 +156,25 @@ AlbumController.updateAlbum = (req, res) => {
             res.status(500).send({ message: 'Error en la peticion' });
         });
 };
-//mètodo para dar de baja los albunes en la base de datos, requiere el external id por parametro
+/**
+ * @api {post} /artist/deleteAlbum/:external  dar dabaja a un album
+ * @apiName deleteAlbum
+ * @apiGroup Album
+ * @apiDescription El método actualiza el estado del album en la base de datos
+ * 
+ * @apiParam {String}           external          Atributo external_id único del usuario.Se obtiene por la URL 
+ * @apiParam {String}           album            id del album. se obtiene mediante el cuerpo de la petición
+ * 
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *        external:48d0a02df461f0519b1c,
+ *        album:1
+ *      }
+ * 
+ * 
+ * @apiSuccess {flashNotification} popup "Se ha eliminado correctamente"
+ * 
+ */
 AlbumController.deleteAlbum = (req, res) => {
     //Actualizar Album
     Album.update({
