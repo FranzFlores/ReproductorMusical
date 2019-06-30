@@ -15,3 +15,4 @@ module.exports = (sequelize, type) => {
         updatedAt:'date_update'
       });
   }
+  

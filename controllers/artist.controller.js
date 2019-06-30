@@ -1,0 +1,300 @@
+'use strict'
+var fs = require('fs');
+var path = require('path');
+
+const { Artist, Album, Song } = require('../database');
+const ArtistController = {};
+
+//----------------------Métodos para la Web--------------------------
+
+/**
+ * @api {post} /artist/saveArtist Guarda información del artista 
+ * @apiName saveArtist
+ * @apiGroup Artist
+ * @apiDescription El método guarda información del artista en la base de datos
+ * 
+ * @apiParam {String}           name              Nombre de artista 
+ * @apiParam {String}           description       Descripción del atista
+ * 
+ *  @apiParamExample {json} Request-Example:
+ *      {
+ *         name: "Nombre artista",
+ *         description:"Descripción artista"
+ *      }
+ * 
+ * @apiSuccess {flashNotification} pop up 'Se ha guardado correctamente el artista'
+ * 
+ */
+ArtistController.saveArtist = (req, res) => {
+    console.log(req.body);
+    Artist.create({
+      name: req.body.name,
+      description: req.body.description,
+      image: 'Zl_cki2bQYdlMjycBCZKlmkB.jpg',
+      status: true
+    }).then((artistStored) => {
+      if (artistStored) {
+        req.flash('success', 'Se ha guardado correctamente el artista');
+      } else {
+        req.flash('message', 'No se pudo guardar el artista');
+      }
+      res.redirect('/profile');
+    }).catch((err) => {
+      res.status(500).send({ message: 'Error en la peticion' });
+    });
+  };
+
+/**
+ * @api {get} /artist/artist/:external obtención de un artista por su atributo external id
+ * @apiName getArtist
+ * @apiGroup Artist
+ * @apiDescription El método obtiene un artitas mediante su external id
+ * 
+ * 
+ * @apiSuccess {json} artist objeto obtenido del modelo artista
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ *
+ *     {
+ * name: "Nombre Artista 1"
+ * description: "Descripcion Artista 1"
+ *     }
+ *
+ * 
+ */
+ArtistController.getArtist = (req, res) => {
+  Artist.findOne({
+    where: { external_id: req.params.external },
+    include: [{ model: Album, include: { model: Song } }]
+  }).then((artist) => {
+    res.status(200).send(artist);
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
+/**
+ * @api {get} /artist/artists listado de los artistas
+ * @apiName getArtists
+ * @apiGroup Artist
+ * @apiDescription El método enlista los artistas almacenados en la base de datos 
+ * 
+ * 
+ * @apiSuccess {[json]} list Arreglo de artistas
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ * [
+ *     {
+ * name: "Nombre Artista 1"
+ * description: "Descripcion Artista 1"
+ *     },
+ *     {
+ * name: "Nombre Artista 2"
+ * description: "Descripcion Artista 2"
+ *     }
+ * ]
+ */
+ArtistController.getArtists = (req, res) => {
+  Artist.findAll({
+    where: { status: true },
+    order: [
+      ['name', 'ASC']
+    ]
+  }).then((list) => {
+    res.status(200).send(list);
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+/**
+ * @api {post} /artist/updateArtist/:external  Actualiza la información del Artista
+ * @apiName updateArtist
+ * @apiGroup Artist
+ * @apiDescription El método actualiza en la Base de Datos la información del Artista.
+ * 
+ * @apiParam {String}           name              Nombre de artista 
+ * @apiParam {String}           description       Descripción del atista
+ * 
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *         name: "Nombre Artista "
+ *         description: "Descripcion Artista " 
+ *      }
+ * 
+ * 
+ * @apiSuccess {flashNotification} popup "Se ha actualizado correctamente el artista"
+ * 
+ */
+ArtistController.updateArtist = (req, res) => {
+  Artist.update({
+    name: req.body.name,
+    description: req.body.description
+  }, {where: { external_id: req.params.external }
+    }).then((result) => {
+      if (result == 0) {
+        req.flash('message', "No se ha podido actualizar el artista");
+      } else {
+        req.flash('success', "Se ha actualizado el artista correctamente");
+      }
+      res.redirect('/profile');
+    }).catch((err) => {
+      res.status(500).send({ message: 'Error en la peticion' });
+    });
+};
+
+/**
+ * @api {post} /artist/deleteArtist/:external  dar dabaja a un artista 
+ * @apiName deleteArtist
+ * @apiGroup Artist
+ * @apiDescription El método actualiza el estado del artista en la base de datos
+ * 
+ * @apiParam {String}           external          Atributo external_id único del usuario.Se obtiene por la URL 
+ * @apiParam {String}           artist            id del artista. se obtiene mediante el cuerpo de la petición
+ * 
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *        external:48d0a02df461f0519b1c,
+ *        artist:1
+ *      }
+ * 
+ * 
+ * @apiSuccess {flashNotification} popup "Se ha eliminado correctamente"
+ * 
+ */
+
+ArtistController.deleteArtist = (req, res) => {
+//Actualizar artist(artista)
+  Artist.update({ status: false }, { where: { external_id: req.params.external } })
+    .then((result) => {
+      if (result == 0) {
+        req.flash('message', 'No se pudo eliminar el artista');
+      } else {
+        Album.findAll({ where: { artistId: req.body.artist } }).then((list) => {
+          var ids = [];
+          list.forEach(element => {
+            ids.push(element.id);
+          });
+
+          Album.update({ status: false }, { where: { id: ids } })
+            .then((result) => {
+              if (result == 0) {
+                req.flash('message', 'No se pudo eliminar el artista');
+              } else {
+                console.log(ids);
+                for (var i = 0; i < ids.length; i++) {
+
+                  Song.findAll({ where: { albumId: ids[i] } })
+                  .then((list) => {
+                    var idsongs = [];
+                    list.forEach(song => {
+                      idsongs.push(song.id);
+                    });
+                    Song.update({ status: false }, { where: { id: idsongs } });
+                  })
+
+                  if (i == (ids.length-1)) {
+                    Song.findAll({ where: { albumId: ids[i] } })
+                    .then((list) => {
+                      var idsongs = [];
+                      list.forEach(song => {
+                        idsongs.push(song.id);
+                      });
+                      Song.update({ status: false }, { where: { id: idsongs } });
+                    })
+                    req.flash('success', 'Se ha elimanado correctamente el artista');
+                    res.redirect('/profile');
+                  }
+                  console.log(i);
+                }
+              }
+            });
+        }).catch((err) => {
+          res.status(500).send({ message: 'Error en la peticion' });
+        });
+      }
+    }).catch((err) => {
+      res.status(500).send({ message: 'Error en la peticion' });
+    });
+};
+
+
+/**
+ * @api {post} /artist/upload-image-artist  Actualiza el atributo image del artista en la base de datos.
+ * @apiName uploadImage
+ * @apiGroup Artist
+ * @apiDescription El método actualiza el atributo image con la ruta de la imagen subida en la base de datos.
+ * 
+ * @apiParam {String}           image               Atributo image que llega del formulario form multipart/form-data.
+ * 
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *         image:AyLjYZwe-HzZ08Yh0Vsiq7An.png
+ *      }
+ * 
+ * @apiSuccess {flashNotification} popup "Se actualizado de manera correcta el artista"
+ * 
+ */
+
+ArtistController.uploadImage = (req, res) => {
+
+  var file_name = "Imagen no encontrada";
+
+  if (req.files) {
+    var file_path = req.files.image.path;
+    var file_split = file_path.split('\/');
+    var file_name = file_split[2];
+
+    var ext_split = file_name.split('\.');
+    var file_ext = ext_split[1];
+
+    if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif') {
+      Artist.update({ image: file_name }, {
+        where: { external_id: req.body.external }
+      }).then((result) => {
+        if (result == 0) {
+          req.flash('message', "No se ha podido actualizar el artista");
+        } else {
+          req.flash('success', "Se ha subido la Imagen del Artista con éxito");
+        }
+        res.redirect('/profile');
+      }).catch((err) => {
+        res.status(500).send({ message: 'Error en la peticion' });
+      });
+    } else {
+      req.flash('message', "La extension del archivo no es correcta");
+      res.redirect('/profile');
+    }
+  } else {
+    req.flash('message', "Ocurrio un error al intentar subir la imagen");
+    res.redirect('/profile');
+  }
+
+};
+/**
+ * @api {get} /artist/get-image-artist/:imageFile Obtiene la foto de perfil del artist.
+ * @apiName getImageFile
+ * @apiGroup Artist
+ * @apiDescription El método obtiene del servidor la imagen que se encuentra en la base de datos del artist.
+ * 
+ * @apiParam {String}           imageFile              identificador de la fotografia.
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *         imageFile:AyLjYZwe-HzZ08Yh0Vsiq7An.png
+ *      }
+ * 
+ * @apiSuccess {file}  fotografia del artista que se encuentra en la base de datos y que se obtiene del servidor.
+ * 
+ */
+ArtistController.getImageFile = (req, res) => {
+  var path_file = './uploads/artists/' + req.params.imageFile;
+
+  fs.exists(path_file, function (exists) {
+    if (exists) {
+      res.sendFile(path.resolve(path_file));
+    } else {
+      res.status(200).send({ message: "No existe la imagen" });
+    }
+  });
+};
+
+module.exports = ArtistController;
