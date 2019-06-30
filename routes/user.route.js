@@ -9,11 +9,6 @@ var multipart = require('connect-multiparty');
 var md_upload = multipart({ uploadDir: './uploads/users' });
 
 
-
-
-
-// Inicio y Cerrar Sesion
-
 router.get('/profile',isLoggedIn,userController.viewProfile);
 
 router.post('/signin', (req,res,next)=>{
