@@ -2,8 +2,8 @@ const Sequelize = require('sequelize')
 const UserModel = require('./models/user.model')
 const AlbumModel = require('./models/album.model')
 const ArtistModel = require('./models/artist.model')
-const PlayListModel = require('./models/PlayList')
-const SongModel = require('./models/Song')
+const PlayListModel = require('./models/playlist.model')
+const SongModel = require('./models/song.model')
 const RoleModel = require('./models/role.model')
 
 //Conexion a la base de datos
