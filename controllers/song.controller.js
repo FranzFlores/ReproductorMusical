@@ -72,7 +72,22 @@ SongController.saveSong = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-//mètodo que actualiza los listeners en la base de datos, requiere el external id por parametro 
+/**
+ * @api {post} /song/listen  Actualiza los listeners 
+ * @apiName updateListeners
+ * @apiGroup Song
+ * @apiDescription El método actualiza los listeners en la base de datos
+ * @apiParam {String}           external_id            id de canción
+ * 
+ * 
+ *  @apiParamExample {json} Request-Example:
+ *      {
+ *         external_id: "443434"
+ *      }
+ * 
+ * @apiSuccess {flashNotification} pop up 'Si se actualizo listeners'
+ * 
+ */
 SongController.updateListeners = (req, res) => {
   Song.findOne({
     where: { external_id: req.params.external }
@@ -95,7 +110,17 @@ SongController.updateListeners = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-//mètodo para obtener un solo registro de la tabla song(cancion) en la base de datos, requiere el external id por parametro
+/**
+ * @api {get} /song/:external Registro de la tabla canción 
+ * @apiName getSong
+ * @apiGroup Song
+ * @apiDescription El método obtiene un solo registro de la tabla cancion
+ * @apiParam {String}           external_id            id de canción
+ * 
+ * 
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ */
 SongController.getSong = (req, res) => {
   Song.findOne({
     where: { external_id: req.params.external },
@@ -106,8 +131,17 @@ SongController.getSong = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-
-// mètodo que en lista todos los song(canciones) registrados 
+/**
+ * @api {get} /song/songs Obtiene todas las canciones
+ * @apiName getSongs
+ * @apiGroup Song
+ * @apiDescription El método obtiene todas las canciones registradas en la base de datos
+ * @apiParam {String}           external_id            id de canción
+ * 
+ * 
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ */
 SongController.getSongs = (req, res) => {
   Song.findAll({
     where: { status: true },
@@ -120,9 +154,26 @@ SongController.getSongs = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-
-//mètodo que actualiza los song(canciones) en la base de datos, requiere el external id por parametro 
-SongController.updateSong = (req, res) => {
+/**
+ * @api {get} /song/updateSong Actualiza las canción 
+ * @apiName updateSong
+ * @apiGroup Song
+ * @apiDescription El método actualiza las canciones
+ * @apiParam {String}           external_id       id de canción
+ * @apiParam {String}           title             titulo de canción
+ * @apiParam {Number}           number            número de la canción
+ * 
+ *  @apiParamExample {json} Request-Example:
+ *      {
+ *         number: 1,
+ *         title: "canción",
+ *         external_id: "443434"
+ * 
+ *      }
+ * @apiSuccess {flashNotification} pop up 'Se ha actualizado la canción correctamente'
+ * 
+ * 
+ */SongController.updateSong = (req, res) => {
   Song.update({
     title: req.body.title,
     number: req.body.number,
@@ -139,7 +190,22 @@ SongController.updateSong = (req, res) => {
       res.status(500).send({ message: 'Error en la peticion' });
     });
 };
-//mètodo para dar de baja una song(cancion) en la base de datos, requiere el external id por parametro 
+/**
+ * @api {post} /song/deleteSong  Dar de baja una canción 
+ * @apiName deleteSong
+ * @apiGroup Song
+ * @apiDescription El método da de baja una canción en la base de datos
+ * @apiParam {String}           external_id            id de canción
+ * 
+ * 
+ *  @apiParamExample {json} Request-Example:
+ *      {
+ *         external_id: "443434"
+ *      }
+ * 
+ * @apiSuccess {flashNotification} pop up 'Se ha elimanado la canción con éxito'
+ * 
+ */
 SongController.deleteSong = (req, res) => {
   Song.update({
     status: false
@@ -157,9 +223,22 @@ SongController.deleteSong = (req, res) => {
     });
 };
 
-
-
-//mètodo para subir el fichero de audio en la tabla song(cancion)
+/**
+ * @api {post} /song/deleteSong  Subir el fichero de audio de una canción 
+ * @apiName uploadFile
+ * @apiGroup Song
+ * @apiDescription El método sube el fichero de audio de una canción en la base de datos
+ * @apiParam {String}           external_id            id de canción
+ * 
+ * 
+ *  @apiParamExample {json} Request-Example:
+ *      {
+ *         external_id: "443434"
+ *      }
+ * 
+ * @apiSuccess {flashNotification} pop up 'Se ha subido el fichero de audio con éxito'
+ * 
+ */
 SongController.uploadFile = (req, res) => {
   var file_name = "no subido...";
 
@@ -193,7 +272,23 @@ SongController.uploadFile = (req, res) => {
     res.redirect('/profile');
   }
 };
-//mètodo para presentar el fichero de song(cancion) con una ruta
+
+/**
+ * @api {get} /song/get-song-file  presenta el fichero de audio de una canción con una ruta
+ * @apiName getSongFile
+ * @apiGroup Song
+ * @apiDescription El método presenta el fichero de audio de una canción con una ruta en la base de datos
+ * @apiParam {String}           external_id            id de canción
+ * 
+ * 
+ *  @apiParamExample {json} Request-Example:
+ *      {
+ *         external_id: "443434"
+ *      }
+ * 
+ * @apiSuccess {flashNotification} pop up 'Se ha subido el fichero de audio con éxito'
+ * 
+ */
 
 SongController.getSongFile = (req, res) => {
   var songFile = req.params.songFile;

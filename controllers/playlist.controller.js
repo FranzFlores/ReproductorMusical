@@ -3,7 +3,27 @@ const {PlayList, User,Song } = require('../database');
 var fs = require('fs');
 var path = require('path');
 var PlayListController = {};
-// mètodo que sirve para guardar playlist, requiere  el id del usuario por parametro
+/**
+ * @api {post} /playlist/savePlayList Guarda información de la playlist
+ * @apiName savePlayList
+ * @apiGroup playlist
+ * @apiDescription El método guarda información de la playlist en la base de datos
+ * 
+ * @apiParam {String}           title             titulo de canción
+ * @apiParam {String}           description       breve descripción de playlist
+ * @apiParam {Number}           userId            el id de la persona a la que pertenece 
+ *
+ * 
+ *  @apiParamExample {json} Request-Example:
+ *      {
+ *         title:"Playlist",
+ *         description: "Playlist",
+ *         number: 1
+ *      }
+ * 
+ * @apiSuccess {flashNotification} pop up 'Se ha guardado la Playlist con éxito'
+ * 
+ */
 PlayListController.savePlayList = (req, res) => {
   PlayList.create({
     title: req.body.title,
@@ -22,7 +42,18 @@ PlayListController.savePlayList = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-//mètodo para gregar unacancion en la playlist
+/**
+ * @api {post} /playlist/addSongs Agrega una canción a la playlist
+ * @apiName addSongtoPlayList
+ * @apiGroup playlist
+ * @apiDescription El método agrega una canción a la playlist en la base de datos
+ * 
+ * @apiParam {Number}           id            el id de la playlist
+ *
+ * 
+ * @apiSuccess {flashNotification} pop up 'Se ha agregado correctamente las canciones'
+ * 
+ */
 PlayListController.addSongtoPlayList = (req, res) => {
   PlayList.findOne({
     where: { id: req.body.playlist }
@@ -35,7 +66,19 @@ PlayListController.addSongtoPlayList = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion 2' });
   });
 };
-//mètodo para obtener un solo registro de la tabla playlist en la base de datos, requiere el external id por parametro
+/**
+ * @api {get} /playlist/getPlayList Obtiene un solo registro de la playlist
+ * @apiName getPlayList
+ * @apiGroup playlist
+ * @apiDescription El método obtiene un solo registro  de la playlist en la base de datos
+ * 
+ * @apiParam {Number}           external_id            el id de la playlist 
+ *
+ * 
+ * 
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ */
 PlayListController.getPlayList = (req, res) => {
   PlayList.findOne({
     where: { external_id: req.params.external }
@@ -45,7 +88,17 @@ PlayListController.getPlayList = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-//mètodo para en listar todos las playlist
+/**
+ * @api {get} /playlist/playlistAdmin listar todas las playlist
+ * @apiName getPlayLists
+ * @apiGroup playlist
+ * @apiDescription El método lista todas las playlist en la base de datos
+ * 
+ * @apiParam {Number}           userId            el id de la playlist
+ *
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ */
 PlayListController.getPlayListAdmin = (req, res) => {
   User.findOne({
     where: { roleId: 1 }
@@ -63,7 +116,17 @@ PlayListController.getPlayListAdmin = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-//mètodo para crear un ranking con las canciones mas escuchadas
+/**
+ * @api {post} /playlist/ranking Crea un ranking con las canciones mas escuchadas
+ * @apiName createPlaylistRanking 
+ * @apiGroup playlist
+ * @apiDescription El método crea un ranking con las canciones mas escuchadas en la base de datos
+ * 
+ * @apiParam {Number}           external_id            el id de la playlist 
+ * 
+ * @apiSuccess {flashNotification} pop up 'Se ha agregado correctamente las canciones'
+ * 
+ */
 PlayListController.createPlaylistRanking = (req,res)=>{
   Song.findAll({where: {status: true},
     order: [['listeners', 'DESC']],
@@ -84,9 +147,18 @@ PlayListController.createPlaylistRanking = (req,res)=>{
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-
-//mètodo paera en listar las canciones del rankings
-
+/**
+ * @api {get} /playlist/songsList Lista las canciones del rankings de la playlist
+ * @apiName getListSongs
+ * @apiGroup playlist
+ * @apiDescription El método Lista las canciones del rankings de la playlist en la base de datos
+ * 
+ * @apiParam {Number}           external_id            el id de la playlist 
+ *
+ * 
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ */
 PlayListController.getListSongs = (req, res) => {
   PlayList.findOne({
     where: { external_id: req.params.playlist }
@@ -101,8 +173,18 @@ PlayListController.getListSongs = (req, res) => {
        res.status(500).send({ message: 'Error en la peticion' });
      });
 };
-// mètodo que en lista todos las playlist registradas
-
+/**
+ * @api {get} /playlist/playLists Lista todas las playlist disponibles
+ * @apiName getplayLists
+ * @apiGroup playlist
+ * @apiDescription El método lista todas las playlist disponibles en la base de datos
+ * 
+ * @apiParam {Number}           user_id            el id de la playlist 
+ *
+ * 
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ */
   PlayListController.getPlayLists = (req, res) => {
     PlayList.findAll({
       where: {
@@ -115,9 +197,18 @@ PlayListController.getListSongs = (req, res) => {
       res.status(500).send({ message: 'Error en la peticion' });
     });
   };
-
-//mètodo para subir fotos en la tabla playlist
-
+/**
+ * @api {post} /playlist/upload-image-playList Subir imagen de la playlist
+ * @apiName uploadImage
+ * @apiGroup playlist
+ * @apiDescription El método subir imagen de la playlist en la base de datos
+ * 
+ * @apiParam {Number}           external_id            el id de la playlist 
+ *
+ * 
+ * @apiSuccess {flashNotification} pop up 'Se ha subido la Imagen de la playlist con éxito'
+ * 
+ */
   PlayListController.uploadImage = (req, res) => {
     var file_name = "Imagen no encontrada";
 
@@ -151,7 +242,23 @@ PlayListController.getListSongs = (req, res) => {
       res.redirect('/profile');
     }
   };
-//mètodo para presentar la imagen de la playlist con una ruta
+  /**
+ * @api {get} /playlist/get-image-playList Presenta la imagen de la playlist con una ruta
+ * @apiName getImageFile
+ * @apiGroup playlist
+ * @apiDescription El método presenta la imagen de la playlist con una ruta en la base de datos
+ * 
+ * @apiParam {String}           imageFile          el archivo de imagen 
+ *
+ *  @apiParamExample {json} Request-Example:
+ *      {
+ *         imageFile:"pZf0xvCSsl5hg0Wq9Yz-Lkoc.jpg"
+ *      }
+ * 
+ *  
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ */
   PlayListController.getImageFile = (req, res) => {
     var imageFile = req.params.imageFile;
     var path_file = './uploads/playLists/' + imageFile;
