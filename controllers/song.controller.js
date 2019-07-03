@@ -76,16 +76,15 @@ SongController.saveSong = (req, res) => {
  * @api {post} /song/listen  Actualiza los listeners 
  * @apiName updateListeners
  * @apiGroup Song
- * @apiDescription El método actualiza los listeners en la base de datos
- * @apiParam {String}           external_id            id de canción
- * 
+ * @apiDescription El método actualiza el atributo listeners en la base de datos
+ * @apiParam {String}           external            id de canción
  * 
  *  @apiParamExample {json} Request-Example:
  *      {
  *         external_id: "443434"
  *      }
  * 
- * @apiSuccess {flashNotification} pop up 'Si se actualizo listeners'
+ * @apiSuccess {console} pop up 'Si se actualizo listeners'
  * 
  */
 SongController.updateListeners = (req, res) => {
@@ -115,11 +114,23 @@ SongController.updateListeners = (req, res) => {
  * @apiName getSong
  * @apiGroup Song
  * @apiDescription El método obtiene un solo registro de la tabla cancion
- * @apiParam {String}           external_id            id de canción
- * 
- * 
+ * @apiParam {String}           external            El atributo external_id de canción
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *         external_id: "443434"
+ *      }
+ * @apiSuccess {json} song
  * @apiSuccessExample Sucess-Response:
  * HTTP/1.1 200 OK
+ *   {
+ *    id_song:1,
+ *    number:1,
+ *    title:"titulo cancion",
+ *    file:"archivo.mp3",
+ *    status: true,
+ *    listerners: 1,
+ *    external_id:gskfgfjlgf 
+ *  }
  */
 SongController.getSong = (req, res) => {
   Song.findOne({
@@ -132,15 +143,33 @@ SongController.getSong = (req, res) => {
   });
 };
 /**
- * @api {get} /song/songs Obtiene todas las canciones
+ * @api {get} /song/songs Obtiene todas las canciones almacenadas en la base de datos
  * @apiName getSongs
  * @apiGroup Song
  * @apiDescription El método obtiene todas las canciones registradas en la base de datos
- * @apiParam {String}           external_id            id de canción
  * 
- * 
+ * @apiSuccess {json} list
  * @apiSuccessExample Sucess-Response:
  * HTTP/1.1 200 OK
+ *   [{
+ *    id_song:1,
+ *    number:1,
+ *    title:"titulo cancion",
+ *    file:"archivo.mp3",
+ *    status: true,
+ *    listerners: 1,
+ *    external_id:gskfgfjlgf 
+ *  },
+ *  {
+ *    id_song:2,
+ *    number:2,
+ *    title:"titulo cancion 2",
+ *    file:"archivo.mp3",
+ *    status: true,
+ *    listerners: 1,
+ *    external_id:gskfgfjlgf 
+ *  }]
+ * 
  */
 SongController.getSongs = (req, res) => {
   Song.findAll({
@@ -155,11 +184,11 @@ SongController.getSongs = (req, res) => {
   });
 };
 /**
- * @api {get} /song/updateSong Actualiza las canción 
+ * @api {post} /song/updateSong Actualiza la información de la canción 
  * @apiName updateSong
  * @apiGroup Song
  * @apiDescription El método actualiza las canciones
- * @apiParam {String}           external_id       id de canción
+ * @apiParam {String}           external          atributo external_id de la canción
  * @apiParam {String}           title             titulo de canción
  * @apiParam {Number}           number            número de la canción
  * 
@@ -195,9 +224,8 @@ SongController.getSongs = (req, res) => {
  * @apiName deleteSong
  * @apiGroup Song
  * @apiDescription El método da de baja una canción en la base de datos
- * @apiParam {String}           external_id            id de canción
- * 
- * 
+ * @apiParam {String}           external            el atributo external_id de canción.Se pasa por la URL
+ *
  *  @apiParamExample {json} Request-Example:
  *      {
  *         external_id: "443434"
@@ -224,16 +252,15 @@ SongController.deleteSong = (req, res) => {
 };
 
 /**
- * @api {post} /song/deleteSong  Subir el fichero de audio de una canción 
+ * @api {post} /song/upload-file-song Actualiza el atributo file de canción en la base de datos.
  * @apiName uploadFile
- * @apiGroup Song
- * @apiDescription El método sube el fichero de audio de una canción en la base de datos
- * @apiParam {String}           external_id            id de canción
+ * @apiGroup song
+ * @apiDescription El método actualiza el atributo file con la ruta de la imagen subida en la base de datos.
  * 
- * 
- *  @apiParamExample {json} Request-Example:
+ * @apiParam {String}           file               Atributo file que llega del formulario form multipart/form-data.
+ * @apiParamExample {json} Request-Example:
  *      {
- *         external_id: "443434"
+ *         file:AyLjYZwe-HzZ08Yh0Vsiq7An.png
  *      }
  * 
  * @apiSuccess {flashNotification} pop up 'Se ha subido el fichero de audio con éxito'
@@ -278,15 +305,13 @@ SongController.uploadFile = (req, res) => {
  * @apiName getSongFile
  * @apiGroup Song
  * @apiDescription El método presenta el fichero de audio de una canción con una ruta en la base de datos
- * @apiParam {String}           external_id            id de canción
- * 
- * 
+ * @apiParam {String}           songFile           Nombre del fichero de audio almacenado en el servidor
  *  @apiParamExample {json} Request-Example:
  *      {
- *         external_id: "443434"
+ *         songFile: "gjfdklgjfdlk.mp3"
  *      }
  * 
- * @apiSuccess {flashNotification} pop up 'Se ha subido el fichero de audio con éxito'
+ * @apiSuccess {file} Archivo de audio de la cancion.
  * 
  */
 
