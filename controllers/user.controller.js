@@ -4,7 +4,7 @@ var path = require('path');
 
 const helpers = require('../lib/helpers');
 const { User, Artist } = require('../database');
-const jwt = require('../lib/jwt');
+// const jwt = require('../lib/jwt');
 const UserController = {};
 
 //----------------------Métodos para la Web--------------------------
@@ -206,33 +206,30 @@ UserController.getImageFile = (req, res) => {
 
 //----------------------Métodos para la Aplicacion Movil--------------------------
 
-UserController.login = (req, res) => {
-    User.findOne({ where: { email: req.body.email } })
-        .then((user) => {
-            if (!user) res.status(404).send('Usuario no existe');
-            else {
-                if (helpers.matchPassword(req.body.password, user.password)) {
-                    if (req.body.getHash) {
-                        res.status(200).send({
-                            token: jwt.createToken(user)
-                        });
-                    } else {
-                        res.status(200).send(user);
-                    }
-                } else {
-                    res.status(404).send('Contraseña Incorrecta');
-                }
-            }
-        }).catch((err) => {
-            console.log(err);
-            res.status(500).send({ message: 'Error en la peticion' });
-        });;
-};
+// UserController.login = (req, res) => {
+//     User.findOne({ where: { email: req.body.email } })
+//         .then((user) => {
+//             if (!user) res.status(404).send('Usuario no existe');
+//             else {
+//                 if (helpers.matchPassword(req.body.password, user.password)) {
+//                     if (req.body.getHash) {
+//                         res.status(200).send({
+//                             token: jwt.createToken(user)
+//                         });
+//                     } else {
+//                         res.status(200).send(user);
+//                     }
+//                 } else {
+//                     res.status(404).send('Contraseña Incorrecta');
+//                 }
+//             }
+//         }).catch((err) => {
+//             console.log(err);
+//             res.status(500).send({ message: 'Error en la peticion' });
+//         });;
+// };
 
 
-UserController.logout = (req, res) => {
-    req.logOut();
-    res.redirect('/');
-};
+
 
 module.exports = UserController;
