@@ -14,6 +14,9 @@ router.post('/updatePassword/:external_id',isLoggedIn,userController.updatePassw
 router.post('/upload-image-user/:external', [md_upload,isLoggedIn],userController.uploadImage);
 router.get('/get-image-user/:imageFile', userController.getImageFile);
 
+router.get("/dashboard",(req,res)=>{
+    res.render("dashboard");
+});
 
 //Para la aplicacion movil
 // router.post('/login',userController.login);
