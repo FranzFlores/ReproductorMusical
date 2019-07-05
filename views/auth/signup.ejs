@@ -1,57 +1,63 @@
 <% include ../header %>
 <style>
-  body{
+  body {
     background-color: #2E2E2E;
   }
 
-  .title{
+  .title {
     color: aliceblue;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     text-align: center;
   }
-  
-  .app{
-    font-size: 2.8em;
-    }
 
-  .footer-form{
+  .app {
+    font-size: 2.8em;
+    text-align: center;
+  }
+
+  .title-app,
+  .title-app:hover {
+    color: aliceblue;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    text-decoration: none;
+  }
+
+  .footer-form {
     color: aliceblue;
 
   }
-
 </style>
 
 
 <div class="container mt-3">
-        <div class="row">
-          <div class="col-md-4 mx-auto">
-            <h2 class="title app">Magic Music</h3>
-            <hr>
-            <h3 class="title">Registro de Usuario</h3>
-            <form action="/signup" method="POST" id="signup">
-              <div class="form-group">
-                <input type="type" name="firstName" placeholder="Nombres" class="form-control" autofocus>
-              </div>
-              <div class="form-group">
-                <input type="type" name="lastName" placeholder="Apellidos" class="form-control">
-              </div>
-              <div class="form-group">
-                <input type="email" name="email" placeholder="Correo Electronico" class="form-control">
-              </div>
-              <div class="form-group">
-                <input type="password" name="password" placeholder="Contraseña" class="form-control">
-              </div>
-              <div class="form-group">
-                <button class="btn btn-success btn-block">
-                  Registrar
-                </button>
-              </div>
-              <div class="text-center footer-form">
-                <small>¿Ya tienes Cuenta? <a href="/signin">Inicia Sesion</a></small>
-              </div>
-              
-            </form>
-          </div>
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <h2 class="app"><a class="title-app" href="/">Magic Music</a></h2>
+      <hr>
+      <h3 class="title">Registro de Usuario</h3>
+      <form action="/signup" method="POST" id="signup">
+        <div class="form-group">
+          <input type="type" name="firstName" placeholder="Nombres" class="form-control" autofocus>
         </div>
-      </div>
+        <div class="form-group">
+          <input type="type" name="lastName" placeholder="Apellidos" class="form-control">
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Correo Electronico" class="form-control">
+        </div>
+        <div class="form-group">
+          <input type="password" name="password" placeholder="Contraseña" class="form-control">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-success btn-block">
+            Registrar
+          </button>
+        </div>
+        <div class="text-center footer-form">
+          <small>¿Ya tienes Cuenta? <a href="/signin">Inicia Sesion</a></small>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <% include ../footer %>
