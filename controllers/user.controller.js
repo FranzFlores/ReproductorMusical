@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 
 const helpers = require('../lib/helpers');
-const { User, Artist } = require('../database');
+const { Role, User, Artist } = require('../database');
 // const jwt = require('../lib/jwt');
 const UserController = {};
 
@@ -203,6 +203,56 @@ UserController.getImageFile = (req, res) => {
         }
     });
 };
+
+UserController.registerUser = (req, res) => {
+
+    var rolesNames = [
+        { name: 'Administrador' },
+        { name: 'Usuario' }
+    ];
+
+    Role.findOne({ where: { name: 'Administrador' } })
+        .then((role) => {
+            if (!role) {
+                Role.bulkCreate(rolesNames);
+            }
+        });
+
+    User.findOne({ where: { email: email } })
+        .then((user) => {
+            if (user) {
+                req.flash('OK', 'El usuario ya existe', "/signup");
+            } else {
+                //Crear un usuario
+                var hash = helpers.generateHash(password);
+                Role.findOne({ where: { name: "Administrador" } })
+                    .then((role) => {
+                        if (role) {
+                            var modelUser = {
+                                firstName: req.body.firstName,
+                                lastName: req.body.lastName,
+                                email: req.body.email,
+                                image: 'null',
+                                password: hash,
+                                roleId: role.id
+                            }
+                            User.create(modelUser)
+                                .then((newUser, created) => {
+                                    if (!newUser) {
+                                        req.flash('OK', 'No se ha podido crear el usuario', "/signup");
+                                    } else {
+                                        console.log(newUser);
+                                        req.flash('GOOD', 'El usuario se ha creado satisfactoriamente', "/signin");
+                                    }
+                                });
+                        } else {
+                            req.flash('BAD', 'Ha ocurrido un error al crear el usuario', "/signup");
+                        }
+                    });
+            }
+        });
+};
+
 
 //----------------------Métodos para la Aplicacion Movil--------------------------
 

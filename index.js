@@ -5,7 +5,7 @@ var path = require('path');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var flash = require('connect-flash');
+var flash = require('express-flash-notification');
 const passport = require('passport');
 const cors = require('cors');
 const { Role,User} = require('./database');
@@ -20,6 +20,28 @@ app.set('port',process.env.PORT||3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+const flashOptions = {
+    beforeSingleRender: function(item, callback){
+      if (item.type) {
+        switch(item.type) {
+          case 'GOOD':
+            item.type = 'Hecho';
+            item.alertClass = 'alert-success';
+            break;
+          case 'OK':
+            item.type = 'Info';
+            item.alertClass = 'alert-info';
+            break;
+          case 'BAD':
+            item.type = 'Error';
+            item.alertClass = 'alert-danger';
+            break;
+        }
+      }
+      callback(null, item);
+    }
+  };
+
 //Middlewares
 app.use(cors());
 app.use(morgan('dev'));
@@ -30,7 +52,7 @@ app.use(session({
     resave: true,
     saveUninitialized: false
 }));
-app.use(flash(app));
+app.use(flash(app, flashOptions));
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(passport.initialize());
