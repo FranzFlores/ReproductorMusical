@@ -4,6 +4,7 @@ var router = express.Router();
 var passport = require('passport');
 
 const { isLoggedIn } = require('../lib/auth');
+const userController = require('../controllers/user.controller');
 
 //Pagina de Inicio
 router.get('/',(req,res)=>{
@@ -15,11 +16,8 @@ router.get('/signup', (req, res) => {
     res.render('auth/signup',{title:"Registro de Usuario"});
 });
 
-// router.post('/signup', passport.authenticate('local-signup', {
-//     successRedirect: '/profile',
-//     failureRedirect: '/signup',
-//     failureFlash: true
-// }));
+router.post('/signup',userController.registerUser);
+
 
 //Inicio de Sesión de Usuario
 router.get('/signin', (req, res) => {
@@ -28,7 +26,7 @@ router.get('/signin', (req, res) => {
 
 router.post('/signin', (req, res, next) => {
     passport.authenticate('local-singin', {
-        successRedirect: '/profile',
+        successRedirect: '/user/dashboard',
         failureRedirect: '/signin',
         failureFlash: true
     })(req, res, next);

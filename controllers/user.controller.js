@@ -218,13 +218,13 @@ UserController.registerUser = (req, res) => {
             }
         });
 
-    User.findOne({ where: { email: email } })
+    User.findOne({ where: { email: req.body.email } })
         .then((user) => {
             if (user) {
                 req.flash('OK', 'El usuario ya existe', "/signup");
             } else {
                 //Crear un usuario
-                var hash = helpers.generateHash(password);
+                var hash = helpers.generateHash(req.body.password);
                 Role.findOne({ where: { name: "Administrador" } })
                     .then((role) => {
                         if (role) {
