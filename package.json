@@ -28,6 +28,7 @@
     "cors": "^2.8.5",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
+    "express-flash-notification": "^0.5.0",
     "express-session": "^1.16.2",
     "http-errors": "^1.7.3",
     "jwt-simple": "^0.5.6",
