@@ -1,0 +1,15 @@
+<form action="/api/upload-file-song" enctype="multipart/form-data" method="POST" id="uploadFile">
+    <div class="form-group">
+        <label for="artist">Seleccionar Canción</label>
+        <select name="external" class="form-control" id="songList"></select>
+    </div>
+    <div class="form-group">
+        <label for="file">Agregar Fichero de Audio</label>
+        <input type="file" name="file"  class="form-control">
+    </div>
+    <div class="form-group">
+        <button class="btn btn-success btn-block">
+            Guardar
+        </button>
+    </div>
+</form>
