@@ -4,7 +4,6 @@ var morgan = require('morgan');
 var path = require('path');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
-//var exphbs = require('express-handlebars');
 var session = require('express-session');
 var flash = require('connect-flash');
 const passport = require('passport');
@@ -18,15 +17,8 @@ require('./lib/passport')(passport,User,Role);
 //Configuraciones
 app.set('port',process.env.PORT||4000);
 
-// app.set('views', path.join(__dirname, 'views'));
-// app.engine('hbs',exphbs({
-//     defaultLayout: 'main',
-//     layoutsDir: path.join(app.get('views'),'layouts'),
-//     partialsDir: path.join(app.get('views'),'partials'),
-//     extname: '.hbs', 
-//     helpers: require('./lib/handlebars').helpers
-// }))
-// app.set('view engine','hbs');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 //Middlewares
 app.use(cors());
