@@ -15,11 +15,11 @@ router.get('/signup', (req, res) => {
     res.render('auth/signup',{title:"Registro de Usuario"});
 });
 
-router.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/profile',
-    failureRedirect: '/signup',
-    failureFlash: true
-}));
+// router.post('/signup', passport.authenticate('local-signup', {
+//     successRedirect: '/profile',
+//     failureRedirect: '/signup',
+//     failureFlash: true
+// }));
 
 //Inicio de Sesión de Usuario
 router.get('/signin', (req, res) => {
