@@ -23,7 +23,7 @@ router.post('/signup', passport.authenticate('local-signup', {
 
 //Inicio de Sesión de Usuario
 router.get('/signin', (req, res) => {
-    res.render('auth/signin');
+    res.render('auth/signin',{title:"Inicio de Sesión"});
 });
 
 router.post('/signin', (req, res, next) => {
