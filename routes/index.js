@@ -7,7 +7,7 @@ const { isLoggedIn } = require('../lib/auth');
 
 //Pagina de Inicio
 router.get('/',(req,res)=>{
-    res.render('index');
+    res.render('index',{title:"Magic Music"});
 });
 
 //Registro de Usuario
