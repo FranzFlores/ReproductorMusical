@@ -1,19 +1,44 @@
-<% include('header')%>
+<% include header %>
+<style>
+  body{
+    background-image: url("img/fondo.jpg");
+    background-position: center center;
+    background-attachment: fixed; 
+    background-size: cover;
+    background-color: #2E2E2E;
+  }
 
+  .title{
+    color: aliceblue;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    text-align: center;
+  }
+
+  .buttons{
+    background: rgb(9,255,56);
+    color: aliceblue;
+    
+  }
+
+  .col-md-7{
+    text-align: center;
+  }
+  
+</style>
 <div class="index">
   <div id="main">
     <section class="welcome-style-3">
       <div class="container">
         <div class="row">
           <div class="col-md-5 mt-3">
-            <h1>Magic Music</h1>
-            <h2>Aplicación Musical</h2>
+            <div class="title">
+                <h1>Magic Music</h1>
+                <h2>Aplicación Musical</h2>
+            </div>
           </div>
           <div class="col-md-7 mt-3">
-            <div class="text-box">
-              <a href="/signin" class="btn btn-secondary btn1">Iniciar Sesión</a>
-              <a href="/signup" class="btn btn-secondary btn2 ">Registrarse</a>
-            </div>
+              <a href="/signin" class="btn buttons">Iniciar Sesión</a>
+              <a href="/signup" class="btn buttons ">Registrarse</a>
           </div>
         </div>
       </div>
@@ -21,4 +46,4 @@
   </div>
 </div>
 
-<% include('footer') %>
+<% include footer %>
