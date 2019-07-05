@@ -12,7 +12,7 @@ router.get('/',(req,res)=>{
 
 //Registro de Usuario
 router.get('/signup', (req, res) => {
-    res.render('auth/signup');
+    res.render('auth/signup',{title:"Registro de Usuario"});
 });
 
 router.post('/signup', passport.authenticate('local-signup', {
