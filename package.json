@@ -10,7 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/FranzFlores/ReproductorMusical.git"
   },
-  "keywords": ["Reproductor"],
+  "keywords": [
+    "Reproductor"
+  ],
   "author": "Franz Flores, Alberto Ortega, Luis Villalta",
   "license": "ISC",
   "bugs": {

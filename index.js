@@ -59,8 +59,8 @@ app.use(require('./routes/index'));
 app.use('/user',require('./routes/user.route'))
 app.use('/album',require('./routes/album.route'));
 app.use('/artist',require('./routes/artist.route'));
-// app.use('/playlist',require('./routes/playlist.route'));
-// app.use('/song',require('./routes/song.route'));
+app.use('/playlist',require('./routes/playlist.route'));
+app.use('/song',require('./routes/song.route'));
 
 //Public 
 app.use(express.static(path.join(__dirname, 'public')));
