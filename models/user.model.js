@@ -8,7 +8,6 @@ module.exports = (sequelize, type) => {
       },
       firstName:type.STRING,
       lastName: type.STRING,
-      userName: type.STRING,
       email: type.STRING,
       password: type.STRING,
       image: type.STRING,
