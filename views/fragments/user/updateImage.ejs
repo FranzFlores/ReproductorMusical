@@ -1,0 +1,14 @@
+<div class="container">
+    <h3 class="text-center">Actualización Foto de Perfil</h3>
+    <form action="/upload-image-user/<%=user.external_id%>" enctype="multipart/form-data" method="POST" id="uploadImage">
+        <div class="form-group">
+            <label for="image" class="font-weight-bold">Selecciona la Imagen que deseas subir</label>
+            <input type="file" name="image"  class="form-control">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success btn-block">
+                Subir Imagen
+            </button>
+        </div>
+    </form>
+</div>

@@ -49,6 +49,20 @@ UserController.viewUpdatePassword = (req, res) => {
 };
 
 /**
+ * @api {get} /user/updateInfo Muestra la vista de actualizar la foto de perfil del Usuario.
+ * @apiName viewUpdateInfo
+ * @apiGroup User
+ * @apiDescription El método renderiza la vista de actualizar la foto de perfil del Usuario.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
+UserController.viewUpdateImage = (req, res) => {
+    res.render("dashboard", { title: "Magic Music", fragment: "fragments/user/updateImage" });
+};
+
+
+/**
  * @api {post} /user/updatePassword/:external_id  Actualiza la contraseña del usuario 
  * @apiName updatePassword
  * @apiGroup User
