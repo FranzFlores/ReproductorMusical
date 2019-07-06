@@ -7,33 +7,32 @@ const { isLoggedIn } = require('../lib/auth');
 const userController = require('../controllers/user.controller');
 
 //Pagina de Inicio
-router.get('/',(req,res)=>{
-    res.render('index',{title:"Magic Music"});
+router.get('/', (req, res) => {
+    res.render('index', { title: "Magic Music" });
 });
 
 //Registro de Usuario
 router.get('/signup', (req, res) => {
-    res.render('auth/signup',{title:"Registro de Usuario"});
+    res.render('auth/signup', { title: "Registro de Usuario" });
 });
 
-router.post('/signup',userController.registerUser);
+router.post('/signup', userController.registerUser);
 
 
 //Inicio de Sesión de Usuario
 router.get('/signin', (req, res) => {
-    res.render('auth/signin',{title:"Inicio de Sesión"});
+    res.render('auth/signin', { title: "Inicio de Sesión" });
 });
 
-router.post('/signin', (req, res, next) => {
-    passport.authenticate('local-singin', {
-        successRedirect: '/user/dashboard',
-        failureRedirect: '/signin',
-        failureFlash: true
-    })(req, res, next);
-});
+router.post('/signin', passport.authenticate('local-singin', {
+    successRedirect: '/user/dashboard',
+    failureRedirect: '/signin',
+    failureFlash: true
+}));
+
 
 //Cerrar Sesión de Usuario
-router.get('/logout',isLoggedIn, (req, res) => {
+router.get('/logout', isLoggedIn, (req, res) => {
     req.logOut();
     res.redirect('/');
 });

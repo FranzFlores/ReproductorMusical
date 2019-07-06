@@ -14,7 +14,7 @@ router.post('/updatePassword/:external_id',isLoggedIn,userController.updatePassw
 router.post('/upload-image-user/:external', [md_upload,isLoggedIn],userController.uploadImage);
 router.get('/get-image-user/:imageFile', userController.getImageFile);
 
-router.get("/dashboard",(req,res)=>{
+router.get("/dashboard",isLoggedIn,(req,res)=>{
     res.render("dashboard");
 });
 

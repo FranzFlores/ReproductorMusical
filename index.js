@@ -12,7 +12,7 @@ const { Role,User} = require('./database');
 
 //Inicializaciones
 var app = express();
-require('./lib/passport')(passport,User,Role);
+require('./lib/passport')(passport);
 
 //Configuraciones
 app.set('port',process.env.PORT||3000);
@@ -55,16 +55,15 @@ app.use(session({
 app.use(flash(app, flashOptions));
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
 
 // Global variables
 app.use((req, res, next) => {
-    // app.locals.message = req.flash('message');
-    // app.locals.success = req.flash('success');
-    app.locals.user = req.user;
-    app.locals.account = req.isAuthenticated();
+    app.locals.user = req.user;  
+    console.log(app.locals.user);
     next();
   });
 
@@ -77,7 +76,7 @@ app.use('/playlist',require('./routes/playlist.route'));
 app.use('/song',require('./routes/song.route'));
 
 //Public 
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use(function (req, res, next) {
     next(createError(404));
