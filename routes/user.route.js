@@ -8,15 +8,16 @@ const { isLoggedIn } = require('../lib/auth');
 const userController = require('../controllers/user.controller');
 const md_upload = multipart({ uploadDir: './uploads/users' });
 
-router.get('/profile',isLoggedIn,userController.viewProfile);
+//Vistas Aplicación Web
+router.get("/dashboard",isLoggedIn,userController.viewDashBoard);
+router.get("/updateInfo",isLoggedIn,userController.viewUpdateInfo);
+
+
 router.post('/updateUser/:external',isLoggedIn,userController.updateUser);
 router.post('/updatePassword/:external_id',isLoggedIn,userController.updatePassword);
 router.post('/upload-image-user/:external', [md_upload,isLoggedIn],userController.uploadImage);
 router.get('/get-image-user/:imageFile', userController.getImageFile);
 
-router.get("/dashboard",isLoggedIn,(req,res)=>{
-    res.render("dashboard");
-});
 
 //Para la aplicacion movil
 // router.post('/login',userController.login);

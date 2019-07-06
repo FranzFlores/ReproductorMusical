@@ -10,23 +10,32 @@ const UserController = {};
 //----------------------Métodos para la Web--------------------------
 
 /**
- * @api {get} /user/profile Muestra la vista de perfil de usuario cuando se inicia sesión
- * @apiName viewProfile
+ * @api {get} /user/dashboard Muestra la vista de perfil de usuario cuando se inicia sesión
+ * @apiName viewDashBoard
  * @apiGroup User
- * @apiDescription El método renderiza la vista del perfil de usuario cuando se inicia sesión
+ * @apiDescription El método renderiza la vista del perfil de usuario cuando se inicia sesión.
  * 
  * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
  * 
  */
-UserController.viewProfile = (req, res) => {
-    Artist.findAll({
-        where: { status: true }
-    }).then((list) => {
-        res.render('sidebar', { list });
-    }).catch((err) => {
-        res.status(500).send({ message: 'Error en la peticion' });
-    });
+UserController.viewDashBoard = (req, res) => {
+    res.render("dashboard", { title: "Magic Music", fragment: "fragments/index" });
 };
+
+/**
+ * @api {get} /user/updateInfo Muestra la vista de actualizar la información de Usuario.
+ * @apiName viewUpdateInfo
+ * @apiGroup User
+ * @apiDescription El método renderiza la vista de actualizar la información de Usuario.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
+UserController.viewUpdateInfo = (req, res) => {
+    res.render("dashboard", { title: "Magic Music", fragment: "fragments/user/updateInfo" });
+};
+
+
 
 /**
  * @api {post} /user/updatePassword/:external_id  Actualiza la contraseña del usuario 
