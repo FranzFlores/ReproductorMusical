@@ -11,6 +11,7 @@ const md_upload = multipart({ uploadDir: './uploads/users' });
 //Vistas Aplicación Web
 router.get("/dashboard",isLoggedIn,userController.viewDashBoard);
 router.get("/updateInfo",isLoggedIn,userController.viewUpdateInfo);
+router.get("/updatePassword",isLoggedIn,userController.viewUpdatePassword);
 
 
 router.post('/updateUser/:external',isLoggedIn,userController.updateUser);

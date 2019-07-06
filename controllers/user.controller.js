@@ -35,7 +35,18 @@ UserController.viewUpdateInfo = (req, res) => {
     res.render("dashboard", { title: "Magic Music", fragment: "fragments/user/updateInfo" });
 };
 
-
+/**
+ * @api {get} /user/updateInfo Muestra la vista de actualizar la información de Usuario.
+ * @apiName viewUpdateInfo
+ * @apiGroup User
+ * @apiDescription El método renderiza la vista de actualizar la información de Usuario.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
+UserController.viewUpdatePassword = (req, res) => {
+    res.render("dashboard", { title: "Magic Music", fragment: "fragments/user/updatePassword" });
+};
 
 /**
  * @api {post} /user/updatePassword/:external_id  Actualiza la contraseña del usuario 
