@@ -1,6 +1,7 @@
 <div class="container">
     <h3 class="text-center">Actualización de la Información del Usuario</h3>
-    <form action="/updateUser/<%=user.external_id%>" method="POST" id="updateUser">
+    <%-locals.flash%>
+    <form action="/user/updateInfo/<%=user.external_id%>" method="POST" id="updateUser">
       <div class="form-group">
         <label for="firstName" class="font-weight-bold">Nombres del Usuario</label>
         <input type="text" name="firstName" placeholder="Nombres" class="form-control" autofocus id="FirstName"

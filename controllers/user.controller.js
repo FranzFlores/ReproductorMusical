@@ -83,18 +83,19 @@ UserController.viewUpdateImage = (req, res) => {
  * 
  */
 UserController.updatePassword = (req, res) => {
-    var external_id = req.params.external_id;
     var newPassword = req.body.newPassword;
     var oldPassword = req.body.oldPassword;
-    User.findOne({ where: { external_id: external_id } })
+
+    User.findOne({ where: { external_id: req.params.external } })
         .then((user) => {
+
             if (helpers.matchPassword(oldPassword, user.password)) {
                 var hash = helpers.generateHash(newPassword);
-                User.update({ password: hash }, { where: { external_id: external_id } })
+
+                User.update({ password: hash }, { where: { external_id: req.params.external } })
                     .then((result) => {
                         if (result == 0) {
-                            req.flash('message', 'No se pudo actualizar la contraseña');
-                            res.redirect('/profile#');
+                            req.flash('BAD', 'No se pudo actualizar la contraseña', "/user/updateInfo");
                         } else {
                             req.flash('success', 'Se ha actualizado correctamente la contraseña');
                             res.redirect('/signin');
@@ -139,22 +140,19 @@ UserController.updatePassword = (req, res) => {
  * @apiSuccess {flashNotification} popup "Se ha actualizado correctamente el usuario"
  * 
  */
-UserController.updateUser = (req, res) => {
+UserController.updateInfo = (req, res) => {
     User.update({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        userName: req.body.user,
         email: req.body.email,
-    },
-        {
-            where: { external_id: req.params.external }
+    }, {
+        where: { external_id: req.params.external }
         }).then((user) => {
             if (user == 0) {
-                req.flash('message', "No se ha podido actualizar el usuario");
+                req.flash('BAD', "No se ha podido actualizar el usuario","/user/updateInfo");
             } else {
-                req.flash('success', "Se ha actualizado correctamente el usuario");
+                req.flash('GOOD', "Se ha actualizado correctamente el usuario","/user/updateInfo");
             }
-            res.redirect('/profile');
         }).catch((err) => {
             console.log(err);
             res.status(500).send({ message: 'Error en la peticion' });

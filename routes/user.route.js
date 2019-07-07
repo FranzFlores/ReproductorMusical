@@ -15,8 +15,8 @@ router.get("/updatePassword",isLoggedIn,userController.viewUpdatePassword);
 router.get("/updateImage",isLoggedIn,userController.viewUpdateImage);
 
 
-router.post('/updateUser/:external',isLoggedIn,userController.updateUser);
-router.post('/updatePassword/:external_id',isLoggedIn,userController.updatePassword);
+router.post('/updateInfo/:external',isLoggedIn,userController.updateInfo);
+router.post('/updatePassword/:external',isLoggedIn,userController.updatePassword);
 router.post('/upload-image-user/:external', [md_upload,isLoggedIn],userController.uploadImage);
 router.get('/get-image-user/:imageFile', userController.getImageFile);
 
