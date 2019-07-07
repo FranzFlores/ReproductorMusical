@@ -188,19 +188,19 @@ UserController.uploadImage = (req, res) => {
                 where: { external_id: req.params.external }
             }).then((user) => {
                 if (user == 0) {
-                    req.flash('OK', "No se pudo actualizar la foto de perfil del usuario","/user/updateImage");
+                    req.flash('OK', "No se pudo actualizar la foto de perfil del usuario", "/user/updateImage");
                 } else {
-                    req.flash('GOOD', "Se actualizado de manera correcta la foto de perfil de usuario","/user/updateImage");
+                    req.flash('GOOD', "Se actualizado de manera correcta la foto de perfil de usuario", "/user/updateImage");
                 }
             }).catch((err) => {
                 console.log(err);
-                req.flash('BAD', "Error al actualizar la foto de perfil del usuario","/user/updateImage");
+                req.flash('BAD', "Error al actualizar la foto de perfil del usuario", "/user/updateImage");
             });
         } else {
-            req.flash('OK', "La extension del archivo no es correcta","/user/updateImage");
+            req.flash('OK', "La extension del archivo no es correcta", "/user/updateImage");
         }
     } else {
-        req.flash('OK', "No se ha podido subir ninguna imagen","/user/updateImage");
+        req.flash('OK', "No se ha podido subir ninguna imagen", "/user/updateImage");
     }
 };
 
@@ -222,15 +222,24 @@ UserController.uploadImage = (req, res) => {
  */
 UserController.getImageFile = (req, res) => {
     var imageFile = req.params.imageFile;
-    var path_file = './uploads/users/' + imageFile
+    var path_file = './uploads/users/' + imageFile;
+    var default_file = './public/img/user.png';
 
     fs.exists(path_file, function (exists) {
         if (exists) {
             res.sendFile(path.resolve(path_file));
         } else {
-            res.status(200).send({ message: "No existe la imagen" });
+            fs.exists(default_file, (exists) => {
+                if (exists) {
+                    res.sendFile(path.resolve(default_file));
+                } else {
+                    res.status(200).send({ message: "No existe la imagen" });
+                }
+            });
         }
     });
+
+
 };
 
 UserController.registerUser = (req, res) => {
@@ -261,7 +270,7 @@ UserController.registerUser = (req, res) => {
                                 firstName: req.body.firstName,
                                 lastName: req.body.lastName,
                                 email: req.body.email,
-                                image: 'img/user.png',
+                                image: 'user.png',
                                 password: hash,
                                 roleId: role.id
                             }
@@ -277,6 +286,8 @@ UserController.registerUser = (req, res) => {
                         } else {
                             req.flash('BAD', 'Ha ocurrido un error al crear el usuario', "/signup");
                         }
+                    }).catch((err) => {
+                        console.log(err);
                     });
             }
         });
