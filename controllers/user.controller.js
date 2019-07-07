@@ -97,14 +97,14 @@ UserController.updatePassword = (req, res) => {
                         if (result == 0) {
                             req.flash('BAD', 'No se pudo actualizar la contraseña', "/user/updatePassword");
                         } else {
-                            req.flash('GOOD', 'Se ha actualizado correctamente la contraseña',"/user/updatePassword");
+                            req.flash('GOOD', 'Se ha actualizado correctamente la contraseña', "/user/updatePassword");
                         }
                     }).catch((err) => {
                         console.log(err);
                         req.flash('BAD', 'No se pudo actualizar la contraseña', "/user/updatePassword");
                     });
             } else {
-                req.flash('OK', 'Ha ingresado incorrectamente su actual contraseña',"/user/updatePassword");
+                req.flash('OK', 'Ha ingresado incorrectamente su actual contraseña', "/user/updatePassword");
             }
         }).catch((err) => {
             console.log(err);
@@ -136,7 +136,6 @@ UserController.updatePassword = (req, res) => {
  * 
  * 
  * @apiSuccess {flashNotification} popup "Se ha actualizado correctamente el usuario"
- * 
  */
 UserController.updateInfo = (req, res) => {
     User.update({
@@ -144,16 +143,16 @@ UserController.updateInfo = (req, res) => {
         lastName: req.body.lastName,
         email: req.body.email,
     }, {
-        where: { external_id: req.params.external }
+            where: { external_id: req.params.external }
         }).then((user) => {
             if (user == 0) {
-                req.flash('BAD', "No se ha podido actualizar el usuario","/user/updateInfo");
+                req.flash('BAD', "No se ha podido actualizar el usuario", "/user/updateInfo");
             } else {
-                req.flash('GOOD', "Se ha actualizado correctamente el usuario","/user/updateInfo");
+                req.flash('GOOD', "Se ha actualizado correctamente el usuario", "/user/updateInfo");
             }
         }).catch((err) => {
             console.log(err);
-            res.status(500).send({ message: 'Error en la peticion' });
+            req.flash('BAD', "No se ha podido actualizar el usuario", "/user/updateInfo");
         });
 };
 
@@ -177,7 +176,8 @@ UserController.uploadImage = (req, res) => {
     var file_name = "Imagen no encontrada";
     if (req.files) {
         var file_path = req.files.image.path;
-        var file_split = file_path.split('\/');
+        // var file_split = file_path.split('\/'); Para Mac
+        var file_split = file_path.split('\\');
         var file_name = file_split[2];
 
         var ext_split = file_name.split('\.');
@@ -188,20 +188,19 @@ UserController.uploadImage = (req, res) => {
                 where: { external_id: req.params.external }
             }).then((user) => {
                 if (user == 0) {
-                    req.flash('message', "No se pudo actualizar la foto de perfil del usuario");
+                    req.flash('OK', "No se pudo actualizar la foto de perfil del usuario","/user/updateImage");
                 } else {
-                    req.flash('success', "Se actualizado de manera correcta el usuario");
+                    req.flash('GOOD', "Se actualizado de manera correcta la foto de perfil de usuario","/user/updateImage");
                 }
-                res.redirect('/profile');
             }).catch((err) => {
-                res.status(500).send({ message: 'Error en la peticion' });
+                console.log(err);
+                req.flash('BAD', "Error al actualizar la foto de perfil del usuario","/user/updateImage");
             });
         } else {
-            req.flash('message', "La extension del archivo no es correcta");
+            req.flash('OK', "La extension del archivo no es correcta","/user/updateImage");
         }
-        res.redirect('/profile');
     } else {
-        res.status(200).send({ message: "No se ha podido subir ninguna imagen" });
+        req.flash('OK', "No se ha podido subir ninguna imagen","/user/updateImage");
     }
 };
 
@@ -262,7 +261,7 @@ UserController.registerUser = (req, res) => {
                                 firstName: req.body.firstName,
                                 lastName: req.body.lastName,
                                 email: req.body.email,
-                                image: 'null',
+                                image: 'img/user.png',
                                 password: hash,
                                 roleId: role.id
                             }
