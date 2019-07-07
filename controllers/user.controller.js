@@ -95,22 +95,20 @@ UserController.updatePassword = (req, res) => {
                 User.update({ password: hash }, { where: { external_id: req.params.external } })
                     .then((result) => {
                         if (result == 0) {
-                            req.flash('BAD', 'No se pudo actualizar la contraseña', "/user/updateInfo");
+                            req.flash('BAD', 'No se pudo actualizar la contraseña', "/user/updatePassword");
                         } else {
-                            req.flash('success', 'Se ha actualizado correctamente la contraseña');
-                            res.redirect('/signin');
+                            req.flash('GOOD', 'Se ha actualizado correctamente la contraseña',"/user/updatePassword");
                         }
                     }).catch((err) => {
                         console.log(err);
-                        res.status(500).send({ message: 'Error en la peticion' });
+                        req.flash('BAD', 'No se pudo actualizar la contraseña', "/user/updatePassword");
                     });
             } else {
-                req.flash('message', 'Ha ingresado incorrectamente su actual contraseña');
-                res.redirect('/profile');
+                req.flash('OK', 'Ha ingresado incorrectamente su actual contraseña',"/user/updatePassword");
             }
         }).catch((err) => {
             console.log(err);
-            res.status(500).send({ message: 'Error en la peticion' });
+            req.flash('BAD', 'No se pudo actualizar la contraseña', "/user/updatePassword");
         });
 };
 
