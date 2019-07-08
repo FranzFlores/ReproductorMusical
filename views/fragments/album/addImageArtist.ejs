@@ -1,0 +1,16 @@
+<form action="/api/upload-image-album" enctype="multipart/form-data" method="POST" id="uploadImage">
+    <h2>Añadir Imagen al Album</h2>
+    <div class="form-group">
+        <label for="artist">Seleccionar Album</label>
+        <select name="external" class="form-control" id="albumImage"></select>
+    </div>
+    <div class="form-group">
+        <label for="image">Selecciona la Imagen que deseas subir</label>
+        <input type="file" name="image" placeholder="Nombres" class="form-control">
+    </div>
+    <div class="form-group">
+        <button class="btn btn-success btn-block">
+            Subir Imagen
+        </button>
+    </div>
+</form>
