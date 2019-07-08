@@ -1,0 +1,23 @@
+    
+<form action="/api/saveAlbum" method="POST" id="addAlbum">
+    <h2>Agregar Album</h2>
+    <div class="form-group">
+        <input type="text" name="title" placeholder="Título del Album" class="form-control">
+    </div>
+    <div class="form-group">
+        <textarea name="description" placeholder="Descripción del Album" cols="30" rows="10"
+            class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <input type="text" name="year" placeholder="Año de Publicación" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="artist">Seleccionar Artista</label>
+        <select name="artist"  class="form-control" id="artistList"></select>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-success btn-block">
+            Guardar
+        </button>
+    </div>
+</form>
