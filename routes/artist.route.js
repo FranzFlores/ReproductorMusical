@@ -8,6 +8,10 @@ const artistController = require('../controllers/artist.controller');
 const { isLoggedIn } = require('../lib/auth');
 const md_upload = multipart({uploadDir: './uploads/artists'});
 
+//Vistas 
+router.get('/addArtist',isLoggedIn,artistController.viewAddArtist);
+router.get('/addImageArtist',isLoggedIn,artistController.viewAddImageArtist);
+
 router.get('/artists',artistController.getArtists);
 router.get('/artist/:external',isLoggedIn,artistController.getArtist);
 router.post('/saveArtist',isLoggedIn,artistController.saveArtist);

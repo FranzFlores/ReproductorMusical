@@ -8,6 +8,16 @@ const AlbumController = {};
 
 //----------------------Métodos para la Web--------------------------
 
+AlbumController.viewAddAlbum = (req,res)=>{
+    res.render("dashboard", { title: "Agregar Album", fragment: "fragments/album/addAlbum" });
+};
+
+AlbumController.viewListAlbum = (req,res)=>{
+    res.render('dashboard',{ title: "Álbumes Disponibles", fragment: "fragments/album/listAlbum" })
+};
+
+
+
 /**
  * @api {post} /album/saveAlbum Guarda información del album 
  * @apiName saveAlbum
@@ -231,8 +241,6 @@ AlbumController.deleteAlbum = (req, res) => {
  * @apiSuccess {flashNotification} popup "Se actualizado de manera correcta el album"
  * 
  */
-
-
 AlbumController.uploadImage = (req, res) => {
 
     var file_name = "Imagen no encontrada";

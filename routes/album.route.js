@@ -8,6 +8,11 @@ const albumController = require('../controllers/album.controller');
 const { isLoggedIn } = require('../lib/auth');
 const md_upload = multipart({uploadDir: './uploads/albums'});
 
+//Vistas de Album
+router.get('/addAlbum',isLoggedIn,albumController.viewAddAlbum);
+
+
+
 router.get('/albums',isLoggedIn,albumController.getAlbums);
 router.get('/album/:external',isLoggedIn,albumController.getAlbum);
 router.post('/saveAlbum',isLoggedIn,albumController.saveAlbum);

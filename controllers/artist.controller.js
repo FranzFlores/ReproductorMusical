@@ -7,6 +7,14 @@ const ArtistController = {};
 
 //----------------------Métodos para la Web--------------------------
 
+
+ArtistController.viewAddArtist = (req,res)=>{
+  res.render("dashboard", { title: "Agregar Artista", fragment: "fragments/artist/addArtist" });
+};
+
+ArtistController.viewAddImageArtist = (req,res)=>{
+  res.render("dashboard", { title: "Agregar Imagen Artista", fragment: "fragments/artist/addImageArtist" });
+};
 /**
  * @api {post} /artist/saveArtist Guarda información del artista 
  * @apiName saveArtist
