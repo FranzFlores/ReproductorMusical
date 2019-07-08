@@ -1,16 +1,18 @@
-<form action="/api/upload-image-artist" enctype="multipart/form-data" method="POST" id="uploadImage">
-    <h2>Añadir Imagen al Artista</h2>
-    <div class="form-group">
-        <label for="artist">Seleccionar Artista</label>
-        <select name="external" class="form-control" id="artistImage"></select>
-    </div>
-    <div class="form-group">
-        <label for="image">Selecciona la Imagen que deseas subir</label>
-        <input type="file" name="image" placeholder="Nombres" class="form-control">
-    </div>
-    <div class="form-group">
-        <button class="btn btn-success btn-block">
-            Subir Imagen
-        </button>
-    </div>
-</form>
+<div class="container">
+    <form action="/api/upload-image-artist" enctype="multipart/form-data" method="POST" id="uploadImage">
+        <h3 class="text-center">Agregar Imagen de Artista</h3>
+        <div class="form-group">
+            <label for="artist">Seleccionar Artista</label>
+            <select name="external" class="form-control" id="artistImage"></select>
+        </div>
+        <div class="form-group">
+            <label for="image">Selecciona la Imagen que deseas subir</label>
+            <input type="file" name="image" placeholder="Nombres" class="form-control">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success btn-block">
+                Subir Imagen
+            </button>
+        </div>
+    </form>
+</div>
