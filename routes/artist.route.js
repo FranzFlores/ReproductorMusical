@@ -10,6 +10,7 @@ const md_upload = multipart({uploadDir: './uploads/artists'});
 
 //Vistas 
 router.get('/addArtist',isLoggedIn,artistController.viewAddArtist);
+router.get('/updateArtist',isLoggedIn,artistController.viewUpdateArtist);
 router.get('/addImageArtist',isLoggedIn,artistController.viewAddImageArtist);
 
 router.get('/artists',artistController.getArtists);

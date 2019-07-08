@@ -24,17 +24,17 @@ AlbumController.viewListAlbum = (req,res)=>{
  * @apiGroup Album
  * @apiDescription El método guarda información del album en la base de datos
  * 
- * @apiParam {String}           title             Nombre del album
- * @apiParam {String}           description       Descripción del album
- *  @apiParam {Date}            year              Año de publicación
- *  @apiParam {String}          artistId          Atributo external_id único del album.Se obtiene por la URL
+ * @apiParam {String}          title             Nombre del album
+ * @apiParam {String}          description       Descripción del album
+ * @apiParam {Date}            year              Año de publicación
+ * @apiParam {String}          artistId          Atributo id único del album.
  * 
  *  @apiParamExample {json} Request-Example:
  *      {
  *         name: "Nombre album",
  *         description:"Descripción album",
  *         year:"Año de publicación",
- *         artistId::48d0a02df461f0519b1c
+ *         artistId:1
  *      }
  * 
  * @apiSuccess {flashNotification} pop up 'Se ha guardado correctamente el album'
@@ -110,7 +110,6 @@ AlbumController.getAlbums = (req, res) => {
  *         description:"Descripción album ",
  *         year:"Año de publicación ",
  *     }
- *
  * 
  */
 AlbumController.getAlbum = (req, res) => {

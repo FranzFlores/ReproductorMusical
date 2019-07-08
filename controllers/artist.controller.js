@@ -8,12 +8,35 @@ const ArtistController = {};
 //----------------------Métodos para la Web--------------------------
 
 
-ArtistController.viewAddArtist = (req,res)=>{
+ArtistController.viewAddArtist = (req, res) => {
   res.render("dashboard", { title: "Agregar Artista", fragment: "fragments/artist/addArtist" });
 };
 
-ArtistController.viewAddImageArtist = (req,res)=>{
-  res.render("dashboard", { title: "Agregar Imagen Artista", fragment: "fragments/artist/addImageArtist" });
+ArtistController.viewUpdateArtist = (req, res) => {
+  Artist.findAll({
+    where: { status: true },
+    order: [
+      ['name', 'ASC']
+    ]
+  }).then((list) => {
+    res.render("dashboard", { title: "Agregar Imagen Artista", fragment: "fragments/artist/updateArtist", artists: list });
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
+ArtistController.viewAddImageArtist = (req, res) => {
+  Artist.findAll({
+    where: { status: true },
+    order: [
+      ['name', 'ASC']
+    ]
+  }).then((list) => {
+    res.render("dashboard", { title: "Agregar Imagen Artista", fragment: "fragments/artist/addImageArtist", artists: list });
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+
 };
 /**
  * @api {post} /artist/saveArtist Guarda información del artista 
@@ -34,23 +57,23 @@ ArtistController.viewAddImageArtist = (req,res)=>{
  * 
  */
 ArtistController.saveArtist = (req, res) => {
-    console.log(req.body);
-    Artist.create({
-      name: req.body.name,
-      description: req.body.description,
-      image: 'Zl_cki2bQYdlMjycBCZKlmkB.jpg',
-      status: true
-    }).then((artistStored) => {
-      if (artistStored) {
-        req.flash('success', 'Se ha guardado correctamente el artista');
-      } else {
-        req.flash('message', 'No se pudo guardar el artista');
-      }
-      res.redirect('/profile');
-    }).catch((err) => {
-      res.status(500).send({ message: 'Error en la peticion' });
-    });
-  };
+  console.log(req.body);
+  Artist.create({
+    name: req.body.name,
+    description: req.body.description,
+    image: 'artist.jpg',
+    status: true
+  }).then((artistStored) => {
+    if (artistStored) {
+      req.flash('GOOD', 'Se ha guardado correctamente el artista', '/artist/addArtist');
+    } else {
+      req.flash('OK', 'No se pudo guardar el artista', '/artist/addArtist');
+    }
+  }).catch((err) => {
+    console.log(err);
+    req.flash('BAD', 'Ocurrio un error al  guardar el artista', '/artist/addArtist');
+  });
+};
 
 /**
  * @api {get} /artist/artist/:external obtención de un artista por su atributo external id
@@ -131,22 +154,22 @@ ArtistController.getArtists = (req, res) => {
  * 
  * 
  * @apiSuccess {flashNotification} popup "Se ha actualizado correctamente el artista"
- * 
  */
 ArtistController.updateArtist = (req, res) => {
   Artist.update({
     name: req.body.name,
     description: req.body.description
-  }, {where: { external_id: req.params.external }
+  }, {
+      where: { external_id: req.params.external }
     }).then((result) => {
       if (result == 0) {
-        req.flash('message', "No se ha podido actualizar el artista");
+        req.flash('OK', "No se ha podido actualizar el artista", '/artist/updateArtist');
       } else {
-        req.flash('success', "Se ha actualizado el artista correctamente");
+        req.flash('GOOD', "Se ha actualizado el artista correctamente", '/artist/updateArtist');
       }
-      res.redirect('/profile');
     }).catch((err) => {
-      res.status(500).send({ message: 'Error en la peticion' });
+      console.log(err);
+      req.flash('BAD', "Error al actualizar el artista", '/artist/updateArtist');
     });
 };
 
@@ -171,11 +194,11 @@ ArtistController.updateArtist = (req, res) => {
  */
 
 ArtistController.deleteArtist = (req, res) => {
-//Actualizar artist(artista)
+
   Artist.update({ status: false }, { where: { external_id: req.params.external } })
     .then((result) => {
       if (result == 0) {
-        req.flash('message', 'No se pudo eliminar el artista');
+        req.flash('OK', 'No se pudo eliminar el artista', '/artist/updateArtist');
       } else {
         Album.findAll({ where: { artistId: req.body.artist } }).then((list) => {
           var ids = [];
@@ -186,22 +209,12 @@ ArtistController.deleteArtist = (req, res) => {
           Album.update({ status: false }, { where: { id: ids } })
             .then((result) => {
               if (result == 0) {
-                req.flash('message', 'No se pudo eliminar el artista');
+                req.flash('OK', 'No se pudo eliminar el artista', '/artist/updateArtist');
               } else {
                 console.log(ids);
                 for (var i = 0; i < ids.length; i++) {
 
                   Song.findAll({ where: { albumId: ids[i] } })
-                  .then((list) => {
-                    var idsongs = [];
-                    list.forEach(song => {
-                      idsongs.push(song.id);
-                    });
-                    Song.update({ status: false }, { where: { id: idsongs } });
-                  })
-
-                  if (i == (ids.length-1)) {
-                    Song.findAll({ where: { albumId: ids[i] } })
                     .then((list) => {
                       var idsongs = [];
                       list.forEach(song => {
@@ -209,19 +222,29 @@ ArtistController.deleteArtist = (req, res) => {
                       });
                       Song.update({ status: false }, { where: { id: idsongs } });
                     })
-                    req.flash('success', 'Se ha elimanado correctamente el artista');
-                    res.redirect('/profile');
+
+                  if (i == (ids.length - 1)) {
+                    Song.findAll({ where: { albumId: ids[i] } })
+                      .then((list) => {
+                        var idsongs = [];
+                        list.forEach(song => {
+                          idsongs.push(song.id);
+                        });
+                        Song.update({ status: false }, { where: { id: idsongs } });
+                      })
+                      req.flash('GOOD', 'Se ha eliminado el artista de manera correcta.','/artist/updateArtist');
                   }
-                  console.log(i);
                 }
               }
             });
         }).catch((err) => {
-          res.status(500).send({ message: 'Error en la peticion' });
+          console.log(err);
+          req.flash('BAD', 'Error al eliminar el artista','/artist/updateArtist');
         });
       }
     }).catch((err) => {
-      res.status(500).send({ message: 'Error en la peticion' });
+      console.log(err);
+      req.flash('BAD', 'Error al eliminar el artista','/artist/updateArtist');
     });
 };
 
@@ -295,12 +318,19 @@ ArtistController.uploadImage = (req, res) => {
  */
 ArtistController.getImageFile = (req, res) => {
   var path_file = './uploads/artists/' + req.params.imageFile;
+  var default_file = './public/img/artist.jpg';
 
   fs.exists(path_file, function (exists) {
     if (exists) {
       res.sendFile(path.resolve(path_file));
     } else {
-      res.status(200).send({ message: "No existe la imagen" });
+      fs.exists(default_file, (exists) => {
+        if (exists) {
+          res.sendFile(path.resolve(default_file));
+        } else {
+          res.status(200).send({ message: "No existe la imagen" });
+        }
+      });
     }
   });
 };
