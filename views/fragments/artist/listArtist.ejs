@@ -15,6 +15,7 @@
     <div class="col-md-9">
       <div class="header">
         <h3 class="text-center" id="artistName"></h3>
+        <p class="text-justify" id="artistDescription"></p>
       </div>
       <hr>
       <div class="body">
@@ -22,6 +23,16 @@
     </div>
   </div>
 </div>
+
+<style>
+  .size {
+    font-size: 1.3em;
+  }
+  .table{
+    width: 98%;
+    margin-top: 2%;
+  }
+</style>
 
 <script>
   $(document).ready(function () {
@@ -35,59 +46,65 @@
         url: url,
         success: function (data, textStatus, jqXHR) {
 
-          console.log(data);
           $("#artistName").text(data.name);
-          //       var albumArtist = "";
-          //       var list = [];
-          //       $.each(data.albums, function (i, item) {
-          //         var songAlbum = "";
-          //         albumArtist += `<img src="http://localhost:4000/api/get-image-album/` + item.image + `" class="image" width="45px" height="45px" alt="">
-          // 															<h3 class="title">`+ item.title + `</h3>
-          // 															<p class="year text-right">`+ item.year + `</p>
-          // 															<hr>
-          // 															<table class="table table-hover">
-          // 																<tbody class="bodyTable">`;
-          //         $.each(item.songs, function (j, item) {
-          //           songAlbum += `<tr data-external="` + item.external_id + `" class="song">
-          // 																<th scope="col">`+ item.number + `</th>
-          // 																<td>`+ item.title + `</td>
-          // 															 </tr>`;
-          //         });
-          //         albumArtist += songAlbum + `</tbody></table>`;
-          //       });
-          //     });
-          //     $(".body").html(albumArtist);
-          // 										$(".song").dblclick(function (e) {
-          // 											var external = $(this).attr('data-external');
-          // 											var url = "http://localhost:4000/api/song/" + external;
-          // 											$.ajax({
-          // 												type: 'GET',
-          // 												dataType: 'json',
-          // 												url: url,
-          // 												success: function (data, textStatus, jqXHR) {
-          // 													$(".titlePlayer").text(data.title);
-          // 													$("#player").attr('src', "http://localhost:4000/api/get-song-file/" + data.file);
-          // 													$(".playerImage").attr('src', "http://localhost:4000/api/get-image-album/" + data.album.image);
-          // 													var url1 = "http://localhost:4000/api/listen/" + data.external_id;
-          // 													$.ajax({
-          // 														type: 'POST',
-          // 														url: url1,
-          // 														success: function (data, textStatus, jqXHR) {
-          // 															console.log(data);
-          // 														}, error: function (jqXHR, textStatus, errorThrown) {
-          // 															console.log(errorThrown);
-          // 														}
-          // 													});
-          // 												},
-          // 												error: function (jqXHR, textStatus, errorThrown) {
-          // 												}
-          // 											});
-          // 											e.preventDefault();
-          // 										});
-          // 									},
-          // 									error: function (jqXHR, textStatus, errorThrown) { }
-          // 								});
-          e.preventDefault();
+          $("#artistDescription").text(data.description);
+          var albumArtist = "";
+          var list = [];
+
+          $.each(data.albums, function (i, item) {
+            var songAlbum = "";
+            albumArtist += `<h4 class="text-center">` + item.title + `</h4>
+            <div class="row">
+              <div class="col-md-3">
+               <img src="http://localhost:3000/album/get-image-album/` + item.image + `" class="image" width="100%" height="100%" alt="">
+              </div>
+              <div class="col-md-9 size">
+                <p>`+ item.year + `</p>
+                <p>`+ item.description + `</p>
+              </div>
+             		<table class="table table-hover table-dark">
+            		<tbody class="bodyTable">`;
+            $.each(item.songs, function (j, itemSong) {
+              songAlbum += `<tr data-external="` + itemSong.external_id + `" class="song">
+            																<th scope="col">`+ itemSong.number + `</th>
+                                            <td>`+ itemSong.title + `</td>
+                                            <td>`+ itemSong.listeners + `</td>
+                                            </tr>
+                                            <hr>`;
+            });
+            albumArtist += songAlbum + `</tbody></table>`;
+          });
+
+          $(".body").html(albumArtist);
+
+          $(".song").dblclick(function (e) {
+            var external = $(this).attr('data-external');
+            var url = "http://localhost:3000/song/" + external;
+
+            $.ajax({
+              type: 'GET',
+              dataType: 'json',
+              url: url,
+              success: function (data, textStatus, jqXHR) {
+                $(".titlePlayer").text(data.title);
+                $("#player").attr('src', "http://localhost:4000/api/get-song-file/" + data.file);
+                $(".playerImage").attr('src', "http://localhost:4000/api/get-image-album/" + data.album.image);
+                var url1 = "http://localhost:4000/api/listen/" + data.external_id;
+                $.ajax({
+                  type: 'POST',
+                  url: url1,
+                  success: function (data, textStatus, jqXHR) {
+                    console.log(data);
+                  }, error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                  }
+                });
+              },
+              error: function (jqXHR, textStatus, errorThrown) { }
+            });
+
+            e.preventDefault();
+          });
         },
         error: function (jqXHR, textStatus, errorThrown) { }
       });

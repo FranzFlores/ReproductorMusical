@@ -11,7 +11,7 @@ var md_upload = multipart({uploadDir: './uploads/songs'});
 router.get('/addSong',isLoggedIn,songController.viewAddSong);
 
 router.get('/songs',songController.getSongs);
-router.get('/song/:external',isLoggedIn,songController.getSong);
+router.get('/:external',isLoggedIn,songController.getSong);
 router.post('/saveSong',isLoggedIn,songController.saveSong);
 router.post('/updateSong/:external',isLoggedIn,songController.updateSong);
 router.post('/upload-file-song',[md_upload,isLoggedIn],songController.uploadFile);
