@@ -7,7 +7,8 @@ const { isLoggedIn } = require('../lib/auth');
 var multipart = require('connect-multiparty');
 var md_upload = multipart({uploadDir: './uploads/songs'});
 
-
+//Vista para la parte web
+router.get('/addSong',isLoggedIn,songController.viewAddSong);
 
 router.get('/songs',songController.getSongs);
 router.get('/song/:external',isLoggedIn,songController.getSong);

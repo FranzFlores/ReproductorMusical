@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var request = require('request');
 
-const { Album, Song,Artist } = require('../database');
+const { Album, Song, Artist } = require('../database');
 const SongController = {};
 
 var options = {
@@ -21,6 +21,19 @@ var options = {
     },
     to: "fcD40OjPbxU:APA91bECGeJ05ezoraaufdmLXBwDiLenVITUWh12uAP7FS11G7bRlDBujFKhBU0--yb-eJdzGZhkGE08BO8Jaz613OkRhCe0CfSaP4wPNoWhsOh56mUFFnZ138aXZj9KYPlRz0yEafG1"
   })
+};
+
+SongController.viewAddSong = (req, res) => {
+  Album.findAll({
+    where: { status: true },
+    order: [
+      ['title', 'ASC']
+    ]
+  }).then((list) => {
+    res.render("dashboard", { title: "Agregar Canción", fragment: "fragments/song/addSong",albums:list });
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
 };
 
 /**
@@ -55,21 +68,21 @@ SongController.saveSong = (req, res) => {
   }).then((songStored) => {
     if (songStored) {
       // Request for Firebase Notificacion                 
-      request(options, (err, response, body) => {
-        if (err) console.log(err);
-        if (!err && response.statusCode == 200) {
-          var info = JSON.parse(body);
-          console.log(info);
-        }
-        console.log(response.statusCode)
-      });
-      req.flash('success', 'Se ha guardado correctamente la información de la canción');
+      // request(options, (err, response, body) => {
+      //   if (err) console.log(err);
+      //   if (!err && response.statusCode == 200) {
+      //     var info = JSON.parse(body);
+      //     console.log(info);
+      //   }
+      //   console.log(response.statusCode)
+      // });
+      req.flash('GOOD', 'Se ha guardado correctamente la información de la canción','/song/addSong');
     } else {
-      req.flash('message', 'No se pudo guardar la canción');
+      req.flash('OK', 'No se pudo guardar la canción','/song/addSong');
     }
-    res.redirect('/profile');
   }).catch((err) => {
-    res.status(500).send({ message: 'Error en la peticion' });
+    console.log(err);
+    req.flash('BAD', 'Error al guardar la canción','/song/addSong');
   });
 };
 /**
@@ -175,7 +188,7 @@ SongController.getSongs = (req, res) => {
   Song.findAll({
     where: { status: true },
     order: ['title'],
-    include: [{ model: Album, attributes: ['image'] ,include: { model: Artist, attributes: ['name'] }}]
+    include: [{ model: Album, attributes: ['image'], include: { model: Artist, attributes: ['name'] } }]
   }).then((list) => {
     res.status(200).send(list);
   }).catch((err) => {
@@ -238,7 +251,7 @@ SongController.deleteSong = (req, res) => {
   Song.update({
     status: false
   }, {
-    where: { external_id: req.params.external }
+      where: { external_id: req.params.external }
     }).then((song) => {
       if (song == 0) {
         req.flash('message', 'No se pudo eliminar la canción');
