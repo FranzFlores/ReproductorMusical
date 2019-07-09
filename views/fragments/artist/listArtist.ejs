@@ -1,0 +1,96 @@
+<div class="contaniner">
+  <h3 class="text-center">Listado de Artistas</h3>
+  <div class="row">
+
+    <div class="col-md-3">
+      <ul class="list-group" id="listArtist">
+        <%artists.forEach(function(artist){ %>
+        <a data-external="<%= artist.external_id%>" href="#" class="list-group-item list-group-item-action artist">
+          <img class="rounded-circle" src="http://localhost:3000/artist/get-image-artist/<%=artist.image%>"
+            height="30px" width="30px" alt="">&nbsp;<%=artist.name%>
+        </a>
+        <%})%>
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <div class="header">
+        <h3 class="text-center" id="artistName"></h3>
+      </div>
+      <hr>
+      <div class="body">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+
+    $('.artist').click(function () {
+      var external = $(this).attr('data-external');
+      var url = "http://localhost:3000/artist/" + external;
+      $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: url,
+        success: function (data, textStatus, jqXHR) {
+
+          console.log(data);
+          $("#artistName").text(data.name);
+          //       var albumArtist = "";
+          //       var list = [];
+          //       $.each(data.albums, function (i, item) {
+          //         var songAlbum = "";
+          //         albumArtist += `<img src="http://localhost:4000/api/get-image-album/` + item.image + `" class="image" width="45px" height="45px" alt="">
+          // 															<h3 class="title">`+ item.title + `</h3>
+          // 															<p class="year text-right">`+ item.year + `</p>
+          // 															<hr>
+          // 															<table class="table table-hover">
+          // 																<tbody class="bodyTable">`;
+          //         $.each(item.songs, function (j, item) {
+          //           songAlbum += `<tr data-external="` + item.external_id + `" class="song">
+          // 																<th scope="col">`+ item.number + `</th>
+          // 																<td>`+ item.title + `</td>
+          // 															 </tr>`;
+          //         });
+          //         albumArtist += songAlbum + `</tbody></table>`;
+          //       });
+          //     });
+          //     $(".body").html(albumArtist);
+          // 										$(".song").dblclick(function (e) {
+          // 											var external = $(this).attr('data-external');
+          // 											var url = "http://localhost:4000/api/song/" + external;
+          // 											$.ajax({
+          // 												type: 'GET',
+          // 												dataType: 'json',
+          // 												url: url,
+          // 												success: function (data, textStatus, jqXHR) {
+          // 													$(".titlePlayer").text(data.title);
+          // 													$("#player").attr('src', "http://localhost:4000/api/get-song-file/" + data.file);
+          // 													$(".playerImage").attr('src', "http://localhost:4000/api/get-image-album/" + data.album.image);
+          // 													var url1 = "http://localhost:4000/api/listen/" + data.external_id;
+          // 													$.ajax({
+          // 														type: 'POST',
+          // 														url: url1,
+          // 														success: function (data, textStatus, jqXHR) {
+          // 															console.log(data);
+          // 														}, error: function (jqXHR, textStatus, errorThrown) {
+          // 															console.log(errorThrown);
+          // 														}
+          // 													});
+          // 												},
+          // 												error: function (jqXHR, textStatus, errorThrown) {
+          // 												}
+          // 											});
+          // 											e.preventDefault();
+          // 										});
+          // 									},
+          // 									error: function (jqXHR, textStatus, errorThrown) { }
+          // 								});
+          e.preventDefault();
+        },
+        error: function (jqXHR, textStatus, errorThrown) { }
+      });
+    });
+  });
+</script>

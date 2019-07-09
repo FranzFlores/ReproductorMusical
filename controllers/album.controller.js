@@ -9,7 +9,16 @@ const AlbumController = {};
 //----------------------Métodos para la Web--------------------------
 
 AlbumController.viewAddAlbum = (req,res)=>{
-    res.render("dashboard", { title: "Agregar Album", fragment: "fragments/album/addAlbum" });
+    Artist.findAll({
+        where: { status: true },
+        order: [
+          ['name', 'ASC']
+        ],
+      }).then((list) => {
+        res.render("dashboard", { title: "Agregar Álbum", fragment: "fragments/album/addAlbum", artists: list,year: new Date()});
+      }).catch((err) => {
+        res.status(500).send({ message: 'Error en la peticion' });
+      });
 };
 
 AlbumController.viewListAlbum = (req,res)=>{
@@ -46,17 +55,17 @@ AlbumController.saveAlbum = (req, res) => {
         description: req.body.description,
         year: req.body.year,
         artistId: req.body.artist,
-        image: '1lCVIZVunDrB5-Gc1ytgdRsz.jpg',
+        image: 'album.jpg',
         status: true,
     }).then((albumStored) => {
         if (albumStored) {
-            req.flash('success', 'Se ha guardado correctamente el album');
+            req.flash('GOOD', 'Se ha guardado correctamente el album','/album/addAlbum');
         } else {
-            req.flash('message', 'No se pudo guardar el Album');
+            req.flash('OK', 'No se pudo guardar el album','/album/addAlbum');
         }
-        res.redirect('/profile');
     }).catch((err) => {
-        res.status(500).send({ message: 'Error en la peticion' });
+        console.log(err);
+        req.flash('BAD', 'Error al guardar el album','/album/addAlbum');
     });
 };
 /**
@@ -291,15 +300,22 @@ AlbumController.uploadImage = (req, res) => {
  */
 AlbumController.getImageFile = (req, res) => {
     var imageFile = req.params.imageFile;
-    var path_file = './uploads/albums/' + imageFile
+    var path_file = './uploads/albums/' + imageFile;
+    var default_file = './public/img/album.jpg';
 
     fs.exists(path_file, function (exists) {
         if (exists) {
-            res.sendFile(path.resolve(path_file));
+          res.sendFile(path.resolve(path_file));
         } else {
-            res.status(200).send({ message: "No existe la imagen" });
+          fs.exists(default_file, (exists) => {
+            if (exists) {
+              res.sendFile(path.resolve(default_file));
+            } else {
+              res.status(200).send({ message: "No existe la imagen" });
+            }
+          });
         }
-    });
+      });
 };
 
 module.exports = AlbumController; 

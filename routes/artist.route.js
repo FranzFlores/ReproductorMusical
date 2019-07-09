@@ -10,11 +10,12 @@ const md_upload = multipart({uploadDir: './uploads/artists'});
 
 //Vistas 
 router.get('/addArtist',isLoggedIn,artistController.viewAddArtist);
+router.get('/listArtist',isLoggedIn,artistController.viewListArtist);
 router.get('/updateArtist',isLoggedIn,artistController.viewUpdateArtist);
 router.get('/addImageArtist',isLoggedIn,artistController.viewAddImageArtist);
 
 router.get('/artists',artistController.getArtists);
-router.get('/artist/:external',isLoggedIn,artistController.getArtist);
+router.get('/:external',isLoggedIn,artistController.getArtist);
 router.post('/saveArtist',isLoggedIn,artistController.saveArtist);
 router.post('/updateArtist/:external',isLoggedIn,artistController.updateArtist);
 router.post('/deleteArtist/:external',isLoggedIn,artistController.deleteArtist);

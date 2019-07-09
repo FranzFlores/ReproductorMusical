@@ -36,8 +36,21 @@ ArtistController.viewAddImageArtist = (req, res) => {
   }).catch((err) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
-
 };
+
+ArtistController.viewListArtist = (req,res)=>{
+  Artist.findAll({
+    where: { status: true },
+    order: [
+      ['name', 'ASC']
+    ]
+  }).then((list) => {
+    res.render("dashboard", { title: "Lista de Artista", fragment: "fragments/artist/listArtist", artists: list });
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
 /**
  * @api {post} /artist/saveArtist Guarda información del artista 
  * @apiName saveArtist
