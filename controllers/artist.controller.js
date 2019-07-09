@@ -285,35 +285,35 @@ ArtistController.uploadImage = (req, res) => {
 
   if (req.files) {
     var file_path = req.files.image.path;
-    var file_split = file_path.split('\/');
-    var file_name = file_split[2];
+    var file_split = file_path.split('\\');
+    // var file_split = file_path.split('\/');
+    var file_name = file_split[file_split.length-1];
+    
 
     var ext_split = file_name.split('\.');
     var file_ext = ext_split[1];
 
-    if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif') {
+    if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif' || file_ext == 'jpeg') {
       Artist.update({ image: file_name }, {
         where: { external_id: req.body.external }
       }).then((result) => {
         if (result == 0) {
-          req.flash('message', "No se ha podido actualizar el artista");
+          req.flash('OK', "No se ha podido actualizar el artista","/artist/addImageArtist");
         } else {
-          req.flash('success', "Se ha subido la Imagen del Artista con éxito");
+          req.flash('GOOD', "Se ha subido la Imagen del Artista con éxito","/artist/addImageArtist");
         }
-        res.redirect('/profile');
       }).catch((err) => {
-        res.status(500).send({ message: 'Error en la peticion' });
+        console.log(err);
+        req.flash("BAD", "Error al subir la imagen del artista","/artist/addImageArtist");
       });
     } else {
-      req.flash('message', "La extension del archivo no es correcta");
-      res.redirect('/profile');
+      req.flash('OK', "La extension del archivo no es correcta","/artist/addImageArtist");
     }
   } else {
-    req.flash('message', "Ocurrio un error al intentar subir la imagen");
-    res.redirect('/profile');
+    req.flash('OK', "Ocurrio un error al intentar subir la imagen","/artist/addImageArtist");
   }
-
 };
+
 /**
  * @api {get} /artist/get-image-artist/:imageFile Obtiene la foto de perfil del artist.
  * @apiName getImageFile

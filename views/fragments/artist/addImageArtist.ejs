@@ -1,11 +1,12 @@
 <div class="container">
+    <h3 class="text-center">Agregar Imagen de Artista</h3>
+    <%-locals.flash%>
     <form action="/artist/upload-image-artist" enctype="multipart/form-data" method="POST">
-        <h3 class="text-center">Agregar Imagen de Artista</h3>
         <div class="form-group">
             <label for="artist">Seleccionar Artista</label>
             <select name="external" class="form-control" id="artistImage">
                 <%artists.forEach(function(artist){%>
-                    <option value="<%=artist.name%>"><%=artist.name%></option>
+                <option value="<%=artist.external_id%>"><%=artist.name%></option>
                 <%});%>
             </select>
         </div>
