@@ -36,6 +36,19 @@ SongController.viewAddSong = (req, res) => {
   });
 };
 
+SongController.viewListSong = (req,res)=>{
+  Song.findAll({
+    where: { status: true },
+    order: ['title'],
+    include: [{ model: Album, attributes: ['image'], include: { model: Artist, attributes: ['name'] } }]
+  }).then((list) => {
+    res.render("dashboard", { title: "Agregar Canción", fragment: "fragments/song/listSong",songs:list });
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
 /**
  * @api {post} /song/saveSong Guarda información de la canción
  * @apiName saveSong
