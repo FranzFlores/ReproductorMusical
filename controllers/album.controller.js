@@ -30,19 +30,24 @@ AlbumController.viewListAlbum = (req, res) => {
     }).then((list) => {
         res.render('dashboard', { title: "Lista Álbumes", fragment: "fragments/album/listAlbum", albums: list, year: new Date() })
     }).catch((err) => {
+        console.log(err);
         res.status(500).send({ message: 'Error en la peticion' });
     });
 };
 
-AlbumController.viewDetailsAlbum = (req, res) => {
+AlbumController.viewDetailsAlbum = (req, res) => {    
     Album.findOne({
-        where: { external_id: req.params.external },
+        where: { external_id: req.params.external_id },
         include: [{ model: Artist }, { model: Song, where: { status: true } }],
         order: [
             [Song, 'number', 'ASC']
         ]
-    }).then((album) => {
-        res.render('dashboard', { title: "Detalle de Álbum", fragment: "fragments/album/detailsAlbum", album: album })
+    }).then((album) => {       
+        if(album){
+            res.render('dashboard', { title: "Detalle de Álbum", fragment: "fragments/album/detailsAlbum", album: album });
+        }else{
+            req.flash('OK',"Debe agregar canciones para ver los detalles del álbum","/album/listAlbum");
+        }
     }).catch((err) => {
         res.status(500).send({ message: 'Error en la peticion' });
     });

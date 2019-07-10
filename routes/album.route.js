@@ -11,12 +11,12 @@ const md_upload = multipart({uploadDir: './uploads/albums'});
 //Vistas de Album
 router.get('/addAlbum',isLoggedIn,albumController.viewAddAlbum);
 router.get('/listAlbum',isLoggedIn,albumController.viewListAlbum);
-router.get('/detailsAlbum/:external',isLoggedIn,albumController.viewDetailsAlbum);
+router.get('/detailsAlbum/:external_id',isLoggedIn,albumController.viewDetailsAlbum);
 router.get('/addImageAlbum',isLoggedIn,albumController.viewAddImageAlbum);
 
 
 router.get('/albums',isLoggedIn,albumController.getAlbums);
-router.get('/album/:external',isLoggedIn,albumController.getAlbum);
+router.get('/:external',isLoggedIn,albumController.getAlbum);
 router.post('/saveAlbum',isLoggedIn,albumController.saveAlbum);
 router.post('/updateAlbum/:external',isLoggedIn,albumController.updateAlbum);
 router.post('/deleteAlbum/:external',isLoggedIn,albumController.deleteAlbum);
