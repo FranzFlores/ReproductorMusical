@@ -166,20 +166,22 @@
             <!-- Contenido -->
             <div class="container-fluid">
                 <%- include(fragment) %>
+    </div>
+    <!-- /Contenido -->
+
+    <!-- Sticky Footer -->
+    <footer class="sticky-footer" style="height: 100px;">
+        <div class="container my-auto">
+            <div class="copyright text-center mx-auto">
+                <h5 class="titlePlayer">Cancion-Artista</h5>
+                <audio controls autoplay controlsList="nodownload" src="" class="ml-5" id="player" type="audio/mpeg"
+                    preload="preload" style="width: 70%"></audio>
             </div>
-            <!-- /Contenido -->
-
-            <!-- Sticky Footer -->
-            <footer class="sticky-footer">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright © Magic Music</span>
-                    </div>
-                </div>
-            </footer>
-
         </div>
-        <!-- /.content-wrapper -->
+    </footer>
+
+    </div>
+    <!-- /.content-wrapper -->
 
     </div>
     <!-- /#wrapper -->
@@ -229,7 +231,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
 
-    
+
 
 </body>
 
