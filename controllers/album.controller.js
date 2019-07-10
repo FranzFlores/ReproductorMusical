@@ -34,7 +34,7 @@ AlbumController.viewListAlbum = (req, res) => {
     });
 };
 
-AlbumController.viewDetailsAlbum = (req,res) =>{
+AlbumController.viewDetailsAlbum = (req, res) => {
     Album.findOne({
         where: { external_id: req.params.external },
         include: [{ model: Artist }, { model: Song, where: { status: true } }],
@@ -42,12 +42,24 @@ AlbumController.viewDetailsAlbum = (req,res) =>{
             [Song, 'number', 'ASC']
         ]
     }).then((album) => {
-        res.render('dashboard', { title: "Detalle de Álbum", fragment: "fragments/album/detailsAlbum", album:album  })
+        res.render('dashboard', { title: "Detalle de Álbum", fragment: "fragments/album/detailsAlbum", album: album })
     }).catch((err) => {
         res.status(500).send({ message: 'Error en la peticion' });
     });
 };
 
+AlbumController.viewAddImageAlbum = (req, res) => {
+    Album.findAll({
+        where: { status: true },
+        order: [
+            ['title', 'ASC']
+        ]
+    }).then((list) => {
+        res.render('dashboard', { title: "Agregar Imagen Album", fragment: "fragments/album/addImageAlbum", albums: list })
+    }).catch((err) => {
+        res.status(500).send({ message: 'Error en la peticion' });
+    });
+};
 
 /**
  * @api {post} /album/saveAlbum Guarda información del album 
@@ -275,34 +287,33 @@ AlbumController.uploadImage = (req, res) => {
 
     if (req.files) {
         var file_path = req.files.image.path;
-        var file_split = file_path.split('\/');
-        var file_name = file_split[2];
+        var file_split = file_path.split('\\');
+        var file_name = file_split[file_split.length-1];
 
         var ext_split = file_name.split('\.');
         var file_ext = ext_split[1];
 
-        if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif') {
+        if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif'  || file_ext == 'jpeg') {
             Album.update({ image: file_name }, {
                 where: { external_id: req.body.external }
             }).then((result) => {
                 if (result == 0) {
-                    req.flash('message', "No se ha podido actualizar el album");
-                } else {
-                    req.flash('success', "Se ha subido la Imagen del Album con éxito");
-                }
-                res.redirect('/profile');
+                    req.flash('OK', "No se ha podido actualizar el álbum","/album/addImageAlbum");
+                  } else {
+                    req.flash('GOOD', "Se ha subido la imagen del álbum con éxito","/album/addImageAlbum");
+                  }
             }).catch((err) => {
-                res.status(500).send({ message: 'Error en la peticion' });
+                console.log(err);
+                req.flash("BAD", "Error al subir la imagen del álbum","/album/addImageAlbum");
             });
         } else {
-            req.flash('message', "La extension del archivo no es correcta");
-            res.redirect('/profile');
+            req.flash('OK', "La extension del archivo no es correcta","/album/addImageAlbum");
         }
     } else {
-        req.flash('message', "Ocurrio un error al intentar subir la imagen");
-        res.redirect('/profile');
+        req.flash('OK', "Ocurrio un error al intentar subir la imagen","/album/addImageAlbum");
     }
 };
+
 /**
  * @api {get} /album/get-image-album/:imageFile Obtiene la foto  del album.
  * @apiName getImageFile
