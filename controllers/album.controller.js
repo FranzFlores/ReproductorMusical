@@ -32,9 +32,21 @@ AlbumController.viewListAlbum = (req, res) => {
     }).catch((err) => {
         res.status(500).send({ message: 'Error en la peticion' });
     });
-
 };
 
+AlbumController.viewDetailsAlbum = (req,res) =>{
+    Album.findOne({
+        where: { external_id: req.params.external },
+        include: [{ model: Artist }, { model: Song, where: { status: true } }],
+        order: [
+            [Song, 'number', 'ASC']
+        ]
+    }).then((album) => {
+        res.render('dashboard', { title: "Detalle de Álbum", fragment: "fragments/album/detailsAlbum", album:album  })
+    }).catch((err) => {
+        res.status(500).send({ message: 'Error en la peticion' });
+    });
+};
 
 
 /**

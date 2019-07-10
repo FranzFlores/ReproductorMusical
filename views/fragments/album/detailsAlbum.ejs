@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <img src="http://localhost:3000/album/get-image-album/<%=album.image%>" height="100%" width="100%" alt="">
+        </div>
+        <div class="col-md-9">
+            <p class="h2"><%=album.title%></p>
+            <p class="h3"><%=album.artist.name%></p>
+            <p class="h5"><%=album.description%></p>
+            <p class="h6"><%=album.year%></p>
+            <div class="table-wrapper-scroll-y">
+                <table class="table table-hover albumTable">
+                    <tbody id="tableBody">
+                        <% album.songs.forEach(function(song){ %>
+                        <tr data-external="<%=song.external_id%>">
+                            <th scope="col"><%=song.number%></th>
+                            <td><%=song.title%></td>
+                            <td><%=song.listeners%></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
