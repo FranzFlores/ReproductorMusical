@@ -1,11 +1,21 @@
 <div class="container">
     <h3 class="text-center">Listado de Canciones</h3>
     <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Artista</th>
+                <th scope="col" >Álbum</th>
+                <th scope="col">Reproducciones</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
         <tbody id="tableBody">
             <% songs.forEach(function(song){ %>
             <tr data-external="<%=song.external_id%>">
-                <th scope="col"><%=song.number%></th>
                 <td><%=song.title%></td>
+                <td><%=song.album.artist.name%></td>
+                <td><%=song.album.title%></td>
                 <td><%=song.listeners%></td>
             </tr>
             <% }); %>

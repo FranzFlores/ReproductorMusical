@@ -40,7 +40,7 @@ SongController.viewListSong = (req,res)=>{
   Song.findAll({
     where: { status: true },
     order: ['title'],
-    include: [{ model: Album, attributes: ['image'], include: { model: Artist, attributes: ['name'] } }]
+    include: [{ model: Album, include: { model: Artist } }]
   }).then((list) => {
     res.render("dashboard", { title: "Agregar Canción", fragment: "fragments/song/listSong",songs:list });
   }).catch((err) => {
