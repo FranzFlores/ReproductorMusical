@@ -30,19 +30,31 @@ SongController.viewAddSong = (req, res) => {
       ['title', 'ASC']
     ]
   }).then((list) => {
-    res.render("dashboard", { title: "Agregar Canción", fragment: "fragments/song/addSong",albums:list });
+    res.render("dashboard", { title: "Agregar Canción", fragment: "fragments/song/addSong", albums: list });
   }).catch((err) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
 
-SongController.viewListSong = (req,res)=>{
+SongController.viewListSong = (req, res) => {
   Song.findAll({
     where: { status: true },
     order: ['title'],
     include: [{ model: Album, include: { model: Artist } }]
   }).then((list) => {
-    res.render("dashboard", { title: "Agregar Canción", fragment: "fragments/song/listSong",songs:list });
+    res.render("dashboard", { title: "Agregar Canción", fragment: "fragments/song/listSong", songs: list });
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
+SongController.viewAddFileSong = (req, res) => {
+  Song.findAll({
+    where: { status: true },
+    order: ['title']
+  }).then((list) => {
+    res.render("dashboard", { title: "Agregar Canción", fragment: "fragments/song/addFileSong", songs: list });
   }).catch((err) => {
     console.log(err);
     res.status(500).send({ message: 'Error en la peticion' });
@@ -89,13 +101,13 @@ SongController.saveSong = (req, res) => {
       //   }
       //   console.log(response.statusCode)
       // });
-      req.flash('GOOD', 'Se ha guardado correctamente la información de la canción','/song/addSong');
+      req.flash('GOOD', 'Se ha guardado correctamente la información de la canción', '/song/addSong');
     } else {
-      req.flash('OK', 'No se pudo guardar la canción','/song/addSong');
+      req.flash('OK', 'No se pudo guardar la canción', '/song/addSong');
     }
   }).catch((err) => {
     console.log(err);
-    req.flash('BAD', 'Error al guardar la canción','/song/addSong');
+    req.flash('BAD', 'Error al guardar la canción', '/song/addSong');
   });
 };
 /**
@@ -237,13 +249,13 @@ SongController.getSongs = (req, res) => {
       where: { external_id: req.params.external }
     }).then((result) => {
       if (result == 0) {
-        req.flash('message', "No se ha podido actualizar la cancioón");
+        req.flash('OK', "No se ha podido actualizar la canción", "/song/listSong");
       } else {
-        req.flash('success', "Se ha actualizado la canción correctamente");
+        req.flash('GOOD', "Se ha actualizado la canción correctamente", "/song/listSong");
       }
-      res.redirect('/profile');
     }).catch((err) => {
-      res.status(500).send({ message: 'Error en la peticion' });
+      console.log(err);
+      req.flash('BAD', "Error al actualizar la canción", "/song/listSong");
     });
 };
 /**
@@ -298,8 +310,9 @@ SongController.uploadFile = (req, res) => {
 
   if (req.files) {
     var file_path = req.files.file.path;
-    var file_split = file_path.split('\/');
-    var file_name = file_split[2];
+    // var file_split = file_path.split('\/');
+    var file_split = file_path.split('\\');
+    var file_name = file_split[file_split.length - 1];
 
     var ext_split = file_name.split('\.');
     var file_ext = ext_split[1];
@@ -309,21 +322,19 @@ SongController.uploadFile = (req, res) => {
         where: { external_id: req.body.external }
       }).then((result) => {
         if (result == 0) {
-          req.flash('message', "No se ha podido actualizar la canción");
+          req.flash('OK', "No se ha podido subir el fichero de la canción", "/song/addFileSong");
         } else {
-          req.flash('success', "Se ha subido el fichero de audio con éxito");
+          req.flash('GOOD', "Se ha subido el fichero de audio con éxito", "/song/addFileSong");
         }
-        res.redirect('/profile');
       }).catch((err) => {
-        res.status(500).send({ message: 'Error en la peticion' });
+        console.log(err);
+        req.flash('BAD', "Error al subir el fichero de audio", "/song/addFileSong");
       });
     } else {
-      req.flash('message', "La extension del archivo no es correcta");
-      res.redirect('/profile');
+      req.flash('OK', "La extension del archivo no es correcta", "/song/addFileSong");
     }
   } else {
-    req.flash('message', "Ocurrio un error al intentar subir la imagen");
-    res.redirect('/profile');
+    req.flash('OK', "Ocurrio un error al intentar subir la imagen", "/song/addFileSong");
   }
 };
 

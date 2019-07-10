@@ -10,6 +10,7 @@ var md_upload = multipart({uploadDir: './uploads/songs'});
 //Vista para la parte web
 router.get('/addSong',isLoggedIn,songController.viewAddSong);
 router.get('/listSong',isLoggedIn,songController.viewListSong);
+router.get('/addFileSong',isLoggedIn,songController.viewAddFileSong);
 
 router.get('/songs',songController.getSongs);
 router.get('/:external',isLoggedIn,songController.getSong);
