@@ -10,7 +10,7 @@ const md_upload = multipart({uploadDir: './uploads/albums'});
 
 //Vistas de Album
 router.get('/addAlbum',isLoggedIn,albumController.viewAddAlbum);
-
+router.get('/listAlbum',isLoggedIn,albumController.viewListAlbum);
 
 
 router.get('/albums',isLoggedIn,albumController.getAlbums);

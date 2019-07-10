@@ -8,21 +8,31 @@ const AlbumController = {};
 
 //----------------------Métodos para la Web--------------------------
 
-AlbumController.viewAddAlbum = (req,res)=>{
+AlbumController.viewAddAlbum = (req, res) => {
     Artist.findAll({
         where: { status: true },
         order: [
-          ['name', 'ASC']
+            ['name', 'ASC']
         ],
-      }).then((list) => {
-        res.render("dashboard", { title: "Agregar Álbum", fragment: "fragments/album/addAlbum", artists: list,year: new Date()});
-      }).catch((err) => {
+    }).then((list) => {
+        res.render("dashboard", { title: "Agregar Álbum", fragment: "fragments/album/addAlbum", artists: list, year: new Date() });
+    }).catch((err) => {
         res.status(500).send({ message: 'Error en la peticion' });
-      });
+    });
 };
 
-AlbumController.viewListAlbum = (req,res)=>{
-    res.render('dashboard',{ title: "Álbumes Disponibles", fragment: "fragments/album/listAlbum" })
+AlbumController.viewListAlbum = (req, res) => {
+    Album.findAll({
+        where: { status: true },
+        order: [
+            ['title', 'ASC']
+        ]
+    }).then((list) => {
+        res.render('dashboard', { title: "Lista Álbumes", fragment: "fragments/album/listAlbum", albums: list, year: new Date() })
+    }).catch((err) => {
+        res.status(500).send({ message: 'Error en la peticion' });
+    });
+
 };
 
 
@@ -59,13 +69,13 @@ AlbumController.saveAlbum = (req, res) => {
         status: true,
     }).then((albumStored) => {
         if (albumStored) {
-            req.flash('GOOD', 'Se ha guardado correctamente el album','/album/addAlbum');
+            req.flash('GOOD', 'Se ha guardado correctamente el album', '/album/addAlbum');
         } else {
-            req.flash('OK', 'No se pudo guardar el album','/album/addAlbum');
+            req.flash('OK', 'No se pudo guardar el album', '/album/addAlbum');
         }
     }).catch((err) => {
         console.log(err);
-        req.flash('BAD', 'Error al guardar el album','/album/addAlbum');
+        req.flash('BAD', 'Error al guardar el album', '/album/addAlbum');
     });
 };
 /**
@@ -165,13 +175,13 @@ AlbumController.updateAlbum = (req, res) => {
             where: { external_id: req.params.external }
         }).then((result) => {
             if (result == 0) {
-                req.flash('message', "No se ha podido actualizar el album");
+                req.flash('OK', "No se ha podido actualizar el album", "/album/listAlbum");
             } else {
-                req.flash('success', "Se ha actualizado correctamente el album");
+                req.flash('GOOD', "Se ha actualizado correctamente el album", "/album/listAlbum");
             }
-            res.redirect('/profile');
         }).catch((err) => {
-            res.status(500).send({ message: 'Error en la peticion' });
+            console.log();
+            req.flash('BAD', "Se ha actualizado correctamente el album", "/album/listAlbum");
         });
 };
 /**
@@ -194,15 +204,14 @@ AlbumController.updateAlbum = (req, res) => {
  * 
  */
 AlbumController.deleteAlbum = (req, res) => {
-    //Actualizar Album
     Album.update({
-        status: req.body.status
+        status: false
     }, {
             where: { external_id: req.params.external }
         }).then((album) => {
 
             if (album == 0) {
-                req.flash('message', 'No se pudo eliminar el album');
+                req.flash('OK', 'No se pudo eliminar el album', '/album/listAlbum');
             } else {
 
                 //Actualizar Canciones de Album
@@ -216,23 +225,22 @@ AlbumController.deleteAlbum = (req, res) => {
                     Song.update({ status: false }, { where: { id: ids } })
                         .then((result) => {
                             if (result == 0) {
-                                req.flash('message', 'No se pudo eliminar el album');
+                                req.flash('OK', 'No se pudo eliminar el album', '/album/listAlbum');
                             } else {
-                                req.flash('success', 'Se ha eliminado el album con exito');
-                                res.redirect('/profile');
+                                req.flash('GOOD', 'Se ha eliminado el album con exito', '/album/listAlbum');
                             }
                         });
                 }).catch((err) => {
                     console.log(err);
-                    res.status(500).send({ message: 'Error en la peticion' });
+                    req.flash('BAD', 'No se pudo eliminar el album', '/album/listAlbum');
                 });
-                //res.redirect('/profile');
             }
         }).catch((err) => {
             console.log(err);
-            res.status(500).send({ message: 'Error en la peticion' });
+            req.flash('BAD', 'No se pudo eliminar el album', '/album/listAlbum');
         });
 };
+
 /**
  * @api {post} /album/upload-image-album  Actualiza el atributo image del album en la base de datos.
  * @apiName uploadImage
@@ -305,17 +313,17 @@ AlbumController.getImageFile = (req, res) => {
 
     fs.exists(path_file, function (exists) {
         if (exists) {
-          res.sendFile(path.resolve(path_file));
+            res.sendFile(path.resolve(path_file));
         } else {
-          fs.exists(default_file, (exists) => {
-            if (exists) {
-              res.sendFile(path.resolve(default_file));
-            } else {
-              res.status(200).send({ message: "No existe la imagen" });
-            }
-          });
+            fs.exists(default_file, (exists) => {
+                if (exists) {
+                    res.sendFile(path.resolve(default_file));
+                } else {
+                    res.status(200).send({ message: "No existe la imagen" });
+                }
+            });
         }
-      });
+    });
 };
 
 module.exports = AlbumController; 

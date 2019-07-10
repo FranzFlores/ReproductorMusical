@@ -1,7 +1,96 @@
-    
-<h1 class="mx-auto">Lista de Albums</h1>
 <div class="container">
-<div class="row albumlist" id="list">
+    <h1 class="text-center">Lista de Álbumes</h1>
+    <%-locals.flash%>
+    <div class="row">
+        <%albums.forEach(function(album){ %>
+        <div class="col-md-4">
+            <div class="card">
+                <a href="#" class="mx-auto" data-external="<%=album.external_id%>" data-toggle="modal"
+                    data-target="#id<%=album.external_id%>">
+                    <img class="card-img-top" style="height:250px; width:250px"
+                        src="http://localhost:3000/album/get-image-album/<%=album.image%>" alt="">
+                </a>
+                <h4 class="text-center"><%=album.title%></h4>
 
-</div>
-</div>
+                <div class="card-body mx-auto">
+                    <%if(user.role = "Administrador"){%>
+                    <div class="buttons">
+                        <button type="button" data-toggle="modal" data-target="#id<%=album.external_id%>"
+                            data-external="<%=album.external_id%>" class="btn btn-success">Editar</button>
+                        <button type="button" data-toggle="modal" data-target="#id<%=album.id%>"
+                            data-external="<%=album.external_id%>" class="btn btn-danger">Eliminar</button>
+                        <a href="/album/albumDetails/<%=album.external_id%>" class="btn btn-primary">Ver más</a>
+                    </div>
+                </div>
+                <!-- Modal para eliminar Album -->
+                <div class="modal fade" id="id<%=album.id%>" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Elimar Álbum</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/album/deleteAlbum/<%=album.external_id%>" method="POST">
+                                    <input name="album" value="<%=album.id%>" hidden>
+                                    <h5 class="text-center">¿Está seguro de eliminar el Album <%= album.title %>?</h5>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Eliminar</button>
+                                        <button type="button" class="btn btn-danger"
+                                            data-dismiss="modal">Cancelar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal para editar Album -->
+                <div class="modal fade" id="id<%=album.external_id%>" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Editar Álbum</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/album/updateAlbum/<%=album.external_id%>" method="POST">
+                                    <div class="form-group">
+                                        <input type="text" value="<%=album.title%>" name="name"
+                                            placeholder="Nombre del Álbum" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="number" min="1950" max="<%=year.getFullYear()%>" name="year"
+                                            placeholder="Año de Publicación" class="form-control"
+                                            value="<%=album.year%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea name="description" placeholder="Descripción del Albuma" cols="30"
+                                            rows="10" class="form-control"><%=album.description%></textarea>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Editar</button>
+                                        <button type="button" class="btn btn-danger"
+                                            data-dismiss="modal">Cancelar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <%}else{%>
+                <div class="card-body mx-auto">
+                    <div class="buttons">
+                        <button type="submit" class="btn btn-primary">Ver más</button>
+                    </div>
+                </div>
+                <%}%>
+            </div>
+        </div>
+        <%});%>
+            </div>
+        </div>
