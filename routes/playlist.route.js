@@ -2,10 +2,14 @@
 
 var express = require('express');
 var router = express.Router();
-var playListController = require('../controllers/playlist.controller');
-const { isLoggedIn } = require('../lib/auth');
 var multipart = require('connect-multiparty');
-var md_upload = multipart({uploadDir: './uploads/playLists'});
+
+const playListController = require('../controllers/playlist.controller');
+const { isLoggedIn } = require('../lib/auth');
+const md_upload = multipart({uploadDir: './uploads/playLists'});
+
+//Vistas para la aplicacion web
+router.get("/addPlaylist",isLoggedIn,playListController.viewAddPlaylist);
 
 router.get('/playLists/:user',isLoggedIn,playListController.getPlayLists);
 router.get('/playList/:external',isLoggedIn,playListController.getPlayList);

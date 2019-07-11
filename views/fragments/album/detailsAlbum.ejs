@@ -12,7 +12,7 @@
                 <table class="table table-hover albumTable">
                     <tbody id="tableBody">
                         <% album.songs.forEach(function(song){ %>
-                        <tr data-external="<%=song.external_id%>">
+                        <tr data-external="<%=song.external_id%>" class="play">
                             <th scope="col"><%=song.number%></th>
                             <td><%=song.title%></td>
                             <td><%=song.listeners%></td>

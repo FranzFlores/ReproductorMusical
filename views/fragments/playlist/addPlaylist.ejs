@@ -1,14 +1,16 @@
-<form action="/api/savePlayList/<%=user.id%>" method="POST" id="addPlaylist">
-    <h2>Agregar PlayList</h2>
-    <div class="form-group">
-        <input type="text" name="title" placeholder="Título de PlayList" class="form-control">
-    </div>
-    <div class="form-group">
-       <input type="text" name="description" placeholder="Descripción" class="form-control">
-    </div>
-    <div class="form-group">
-        <button class="btn btn-success btn-block">
-            Guardar
-        </button>
-    </div>
-</form>
+<div class="container">
+    <h3 class="text-center">Agregar PlayList</h3>
+    <form action="/playlist/savePlayList/<%=user.id%>" method="POST">
+        <div class="form-group">
+            <input type="text" name="title" placeholder="Título de PlayList" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <input type="text" name="description" placeholder="Descripción" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success btn-block">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>

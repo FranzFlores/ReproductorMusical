@@ -1,8 +1,16 @@
 'use strict'
-const {PlayList, User,Song } = require('../database');
 var fs = require('fs');
 var path = require('path');
-var PlayListController = {};
+
+const {PlayList, User,Song } = require('../database');
+const PlayListController = {};
+
+PlayListController.viewAddPlaylist = (req,res)=>{
+  res.render("dashboard", { title: "Agregar Playlist", fragment: "fragments/playlist/addPlaylist"});
+};
+
+
+
 /**
  * @api {post} /playlist/savePlayList Guarda información de la playlist
  * @apiName savePlayList
