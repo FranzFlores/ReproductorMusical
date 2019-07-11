@@ -122,7 +122,7 @@ SongController.saveSong = (req, res) => {
  *         external_id: "443434"
  *      }
  * 
- * @apiSuccess {console} pop up 'Si se actualizo listeners'
+ * @apiSuccess {console} 'Si se actualizo listeners'
  * 
  */
 SongController.updateListeners = (req, res) => {
@@ -173,7 +173,7 @@ SongController.updateListeners = (req, res) => {
 SongController.getSong = (req, res) => {
   Song.findOne({
     where: { external_id: req.params.external },
-    include: [{ model: Album }]
+    include: [{ model: Album, include:{model:Artist} }]
   }).then((song) => {
     res.status(200).send(song);
   }).catch((err) => {

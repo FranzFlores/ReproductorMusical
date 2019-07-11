@@ -51,6 +51,7 @@ ArtistController.viewListArtist = (req,res)=>{
   });
 };
 
+
 /**
  * @api {post} /artist/saveArtist Guarda información del artista 
  * @apiName saveArtist

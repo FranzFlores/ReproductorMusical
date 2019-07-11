@@ -1,7 +1,6 @@
 <div class="contaniner">
   <h3 class="text-center">Listado de Artistas</h3>
   <div class="row">
-
     <div class="col-md-3">
       <ul class="list-group" id="listArtist">
         <%artists.forEach(function(artist){ %>
@@ -22,92 +21,96 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <style>
   .size {
     font-size: 1.3em;
   }
-  .table{
+
+  .table {
     width: 98%;
     margin-top: 2%;
   }
 </style>
 
 <script>
-  $(document).ready(function () {
+  // $(document).ready(function () {
 
-    $('.artist').click(function () {
-      var external = $(this).attr('data-external');
-      var url = "http://localhost:3000/artist/" + external;
-      $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: url,
-        success: function (data, textStatus, jqXHR) {
+  //   $('.artist').click(function () {
+  //     var external = $(this).attr('data-external');
+  //     var url = "http://localhost:3000/artist/" + external;
+  //     $.ajax({
+  //       type: 'GET',
+  //       dataType: 'json',
+  //       url: url,
+  //       success: function (data, textStatus, jqXHR) {
 
-          $("#artistName").text(data.name);
-          $("#artistDescription").text(data.description);
-          var albumArtist = "";
-          var list = [];
+  //         $("#artistName").text(data.name);
+  //         $("#artistDescription").text(data.description);
 
-          $.each(data.albums, function (i, item) {
-            var songAlbum = "";
-            albumArtist += `<h4 class="text-center">` + item.title + `</h4>
-            <div class="row">
-              <div class="col-md-3">
-               <img src="http://localhost:3000/album/get-image-album/` + item.image + `" class="image" width="100%" height="100%" alt="">
-              </div>
-              <div class="col-md-9 size">
-                <p>`+ item.year + `</p>
-                <p>`+ item.description + `</p>
-              </div>
-             		<table class="table table-hover table-dark">
-            		<tbody class="bodyTable">`;
-            $.each(item.songs, function (j, itemSong) {
-              songAlbum += `<tr data-external="` + itemSong.external_id + `" class="song">
-            																<th scope="col">`+ itemSong.number + `</th>
-                                            <td>`+ itemSong.title + `</td>
-                                            <td>`+ itemSong.listeners + `</td>
-                                            </tr>
-                                            <hr>`;
-            });
-            albumArtist += songAlbum + `</tbody></table>`;
-          });
+  //         var albumArtist = "";
+  //         var list = [];
 
-          $(".body").html(albumArtist);
+  //         $.each(data.albums, function (i, item) {
+            
+  //           var songAlbum = "";
+  //           albumArtist += `<h4 class="text-center">` + item.title + `</h4>
+  //           <div class="row">
+  //             <div class="col-md-3">
+  //              <img src="http://localhost:3000/album/get-image-album/` + item.image + `" class="image" width="100%" height="100%" alt="">
+  //             </div>
+  //             <div class="col-md-9 size">
+  //               <p>`+ item.year + `</p>
+  //               <p>`+ item.description + `</p>
+  //             </div>
+  //            		<table class="table table-hover table-dark">
+  //           		<tbody class="bodyTable">`;
+  //           $.each(item.songs, function (j, itemSong) {
+  //             songAlbum += `<tr data-external="` + itemSong.external_id + `" class="play">
+  //           																<th scope="col">`+ itemSong.number + `</th>
+  //                                           <td>`+ itemSong.title + `</td>
+  //                                           <td>`+ itemSong.listeners + `</td>
+  //                                           </tr>`;
+  //           });
+  //           albumArtist += songAlbum + `</tbody></table></div>`;
+  //         });
+  //         $(".body").html(albumArtist);
 
-          $(".song").dblclick(function (e) {
-            var external = $(this).attr('data-external');
-            var url = "http://localhost:3000/song/" + external;
+         
 
-            $.ajax({
-              type: 'GET',
-              dataType: 'json',
-              url: url,
-              success: function (data, textStatus, jqXHR) {
-                $(".titlePlayer").text(data.title);
-                $("#player").attr('src', "http://localhost:4000/api/get-song-file/" + data.file);
-                $(".playerImage").attr('src', "http://localhost:4000/api/get-image-album/" + data.album.image);
-                var url1 = "http://localhost:4000/api/listen/" + data.external_id;
-                $.ajax({
-                  type: 'POST',
-                  url: url1,
-                  success: function (data, textStatus, jqXHR) {
-                    console.log(data);
-                  }, error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                  }
-                });
-              },
-              error: function (jqXHR, textStatus, errorThrown) { }
-            });
+  //         // $(".song").dblclick(function (e) {
+  //         //   var external = $(this).attr('data-external');
+  //         //   var url = "http://localhost:3000/song/" + external;
 
-            e.preventDefault();
-          });
-        },
-        error: function (jqXHR, textStatus, errorThrown) { }
-      });
-    });
-  });
+  //         //   $.ajax({
+  //         //     type: 'GET',
+  //         //     dataType: 'json',
+  //         //     url: url,
+  //         //     success: function (data, textStatus, jqXHR) {
+  //         //       $(".titlePlayer").text(data.title);
+  //         //       $("#player").attr('src', "http://localhost:4000/api/get-song-file/" + data.file);
+  //         //       $(".playerImage").attr('src', "http://localhost:4000/api/get-image-album/" + data.album.image);
+  //         //       var url1 = "http://localhost:4000/api/listen/" + data.external_id;
+  //         //       $.ajax({
+  //         //         type: 'POST',
+  //         //         url: url1,
+  //         //         success: function (data, textStatus, jqXHR) {
+  //         //           console.log(data);
+  //         //         }, error: function (jqXHR, textStatus, errorThrown) {
+  //         //           console.log(errorThrown);
+  //         //         }
+  //         //       });
+  //         //     },
+  //         //     error: function (jqXHR, textStatus, errorThrown) { }
+  //         //   });
+
+  //         //   e.preventDefault();
+  //         // });
+  //       },
+  //       error: function (jqXHR, textStatus, errorThrown) { }
+  //     });
+  //   });
+  // });
 </script>
