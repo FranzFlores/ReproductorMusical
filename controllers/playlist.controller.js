@@ -2,14 +2,25 @@
 var fs = require('fs');
 var path = require('path');
 
-const {PlayList, User,Song } = require('../database');
+const { PlayList, User, Song } = require('../database');
 const PlayListController = {};
 
-PlayListController.viewAddPlaylist = (req,res)=>{
-  res.render("dashboard", { title: "Agregar Playlist", fragment: "fragments/playlist/addPlaylist"});
+PlayListController.viewAddPlaylist = (req, res) => {
+  res.render("dashboard", { title: "Agregar Playlist", fragment: "fragments/playlist/addPlaylist" });
 };
 
-
+PlayListController.viewMyPlaylist = (req, res) => {
+  PlayList.findAll({
+    where: {
+      status: true,
+      userId: req.params.user
+    }
+  }).then((list) => {
+    res.render("dashboard", { title: "Mis Playlist", fragment: "fragments/playlist/myPlaylist",playlists:list });
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
 
 /**
  * @api {post} /playlist/savePlayList Guarda información de la playlist
@@ -37,19 +48,20 @@ PlayListController.savePlayList = (req, res) => {
     title: req.body.title,
     description: req.body.description,
     status: true,
-    image: 'pZf0xvCSsl5hg0Wq9Yz-Lkoc.jpg',
+    image: 'playlist.jpg',
     userId: req.params.user
   }).then((playListStored) => {
     if (playListStored) {
-      req.flash('success', 'Se ha guardado la Playlist con éxito');
+      req.flash('GOOD', 'Se ha guardado la Playlist con éxito', "/playlist/addPlaylist");
     } else {
-      req.flash('message', 'No se pudo guardar la Playlist');
+      req.flash('OK', 'No se pudo guardar la Playlist', "/playlist/addPlaylist");
     }
-    res.redirect('/profile');
   }).catch((err) => {
-    res.status(500).send({ message: 'Error en la peticion' });
+    console.log(err);
+    req.flash('BAD', 'Error al guardar la Playlist', "/playlist/addPlaylist");
   });
 };
+
 /**
  * @api {post} /playlist/addSongs Agrega una canción a la playlist
  * @apiName addSongtoPlayList
@@ -140,7 +152,7 @@ PlayListController.getPlayList = (req, res) => {
 PlayListController.getPlayListAdmin = (req, res) => {
   User.findOne({
     where: { roleId: 1 }
-  }).then((user)=>{
+  }).then((user) => {
     PlayList.findAll({
       where: { userId: user.id }
     }).then((list) => {
@@ -163,10 +175,11 @@ PlayListController.getPlayListAdmin = (req, res) => {
  * @apiSuccess {flashNotification} pop up 'Se ha agregado correctamente las canciones'
  * 
  */
-PlayListController.createPlaylistRanking = (req,res)=>{
-  Song.findAll({where: {status: true},
+PlayListController.createPlaylistRanking = (req, res) => {
+  Song.findAll({
+    where: { status: true },
     order: [['listeners', 'DESC']],
-    limit : 25 
+    limit: 25
   }).then((list) => {
     PlayList.findOne({
       where: { external_id: '508104d0-cf74-4a9d-ad7d-42a0754f3ae0' }
@@ -220,12 +233,12 @@ PlayListController.getListSongs = (req, res) => {
     playList.getSongs()
       .then((list) => {
         res.status(200).send(list);
-       }).catch((err) => {
+      }).catch((err) => {
         res.status(500).send({ message: 'Error en la peticion' });
       });
-     }).catch((err) => {
-       res.status(500).send({ message: 'Error en la peticion' });
-     });
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
 };
 /**
  * @api {get} /playlist/playLists Lista todas las playlist disponibles
@@ -255,18 +268,18 @@ PlayListController.getListSongs = (req, res) => {
  *    external_id: fjgfljglksfgkfgfkl
  *  }]
  */
-  PlayListController.getPlayLists = (req, res) => {
-    PlayList.findAll({
-      where: {
-        status: true,
-        userId: req.params.user
-      }
-    }).then((list) => {
-      res.status(200).send(list);
-    }).catch((err) => {
-      res.status(500).send({ message: 'Error en la peticion' });
-    });
-  };
+PlayListController.getPlayLists = (req, res) => {
+  PlayList.findAll({
+    where: {
+      status: true,
+      userId: req.params.user
+    }
+  }).then((list) => {
+    res.status(200).send(list);
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
 
 /**
  * @api {post} /playlist/upload-image-playList Actualiza el atributo image de playlist en la base de datos.
@@ -283,66 +296,66 @@ PlayListController.getListSongs = (req, res) => {
  * @apiSuccess {flashNotification} pop up 'Se ha subido la Imagen de la playlist con éxito'
  * 
  */
-  PlayListController.uploadImage = (req, res) => {
-    var file_name = "Imagen no encontrada";
+PlayListController.uploadImage = (req, res) => {
+  var file_name = "Imagen no encontrada";
 
-    if (req.files) {
-      var file_path = req.files.image.path;
-      var file_split = file_path.split('\/');
-      var file_name = file_split[2];
+  if (req.files) {
+    var file_path = req.files.image.path;
+    var file_split = file_path.split('\/');
+    var file_name = file_split[2];
 
-      var ext_split = file_name.split('\.');
-      var file_ext = ext_split[1];
+    var ext_split = file_name.split('\.');
+    var file_ext = ext_split[1];
 
-      if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif') {
-        PlayList.update({ image: file_name }, {
-          where: { external_id: req.params.id }
-        }).then((result) => {
-          if (result==0) {
-            req.flash('message', "No se ha podido actualizar la playlist");
-          } else {
-            req.flash('success', "Se ha subido la Imagen de la playlist con éxito");
-          }
-          res.redirect('/profile');
-        }).catch((err) => {
-          res.status(500).send({ message: 'Error en la peticion' });
-        });
-      } else {
-        req.flash('message', "La extension del archivo no es correcta");
+    if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif') {
+      PlayList.update({ image: file_name }, {
+        where: { external_id: req.params.id }
+      }).then((result) => {
+        if (result == 0) {
+          req.flash('message', "No se ha podido actualizar la playlist");
+        } else {
+          req.flash('success', "Se ha subido la Imagen de la playlist con éxito");
+        }
         res.redirect('/profile');
-      }
+      }).catch((err) => {
+        res.status(500).send({ message: 'Error en la peticion' });
+      });
     } else {
-      req.flash('message', "Ocurrio un error al intentar subir la imagen");
+      req.flash('message', "La extension del archivo no es correcta");
       res.redirect('/profile');
     }
-  };
-  /**
- * @api {get} /playlist/get-image-playList Presenta la imagen de la playlist con una ruta
- * @apiName getImageFile
- * @apiGroup playlist
- * @apiDescription El método presenta la imagen de la playlist con una ruta en la base de datos
- * 
- * @apiParam {String}           imageFile          el archivo de imagen 
- *
- *  @apiParamExample {json} Request-Example:
- *      {
- *         imageFile:"pZf0xvCSsl5hg0Wq9Yz-Lkoc.jpg"
- *      }
- *  
- * @apiSuccessExample {file}  fotografia de la playlist que se encuentra en la base de datos y que se obtiene del servidor.
- */
-  PlayListController.getImageFile = (req, res) => {
-    var imageFile = req.params.imageFile;
-    var path_file = './uploads/playLists/' + imageFile;
+  } else {
+    req.flash('message', "Ocurrio un error al intentar subir la imagen");
+    res.redirect('/profile');
+  }
+};
+/**
+* @api {get} /playlist/get-image-playList Presenta la imagen de la playlist con una ruta
+* @apiName getImageFile
+* @apiGroup playlist
+* @apiDescription El método presenta la imagen de la playlist con una ruta en la base de datos
+* 
+* @apiParam {String}           imageFile          el archivo de imagen 
+*
+*  @apiParamExample {json} Request-Example:
+*      {
+*         imageFile:"pZf0xvCSsl5hg0Wq9Yz-Lkoc.jpg"
+*      }
+*  
+* @apiSuccessExample {file}  fotografia de la playlist que se encuentra en la base de datos y que se obtiene del servidor.
+*/
+PlayListController.getImageFile = (req, res) => {
+  var imageFile = req.params.imageFile;
+  var path_file = './uploads/playLists/' + imageFile;
 
-    fs.exists(path_file, function (exists) {
-      if (exists) {
-        res.sendFile(path.resolve(path_file));
-      } else {
-        res.status(200).send({ message: "No existe la imagen" });
-      }
-    });
-  };
+  fs.exists(path_file, function (exists) {
+    if (exists) {
+      res.sendFile(path.resolve(path_file));
+    } else {
+      res.status(200).send({ message: "No existe la imagen" });
+    }
+  });
+};
 
 
-  module.exports = PlayListController;
+module.exports = PlayListController;

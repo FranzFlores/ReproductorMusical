@@ -10,6 +10,7 @@ const md_upload = multipart({uploadDir: './uploads/playLists'});
 
 //Vistas para la aplicacion web
 router.get("/addPlaylist",isLoggedIn,playListController.viewAddPlaylist);
+router.get("/myPlaylist",isLoggedIn,playListController.viewMyPlaylist);
 
 router.get('/playLists/:user',isLoggedIn,playListController.getPlayLists);
 router.get('/playList/:external',isLoggedIn,playListController.getPlayList);

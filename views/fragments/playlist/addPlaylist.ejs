@@ -1,5 +1,6 @@
 <div class="container">
     <h3 class="text-center">Agregar PlayList</h3>
+    <%-locals.flash%>
     <form action="/playlist/savePlayList/<%=user.id%>" method="POST">
         <div class="form-group">
             <input type="text" name="title" placeholder="Título de PlayList" class="form-control" required>
