@@ -7,7 +7,7 @@ const ArtistController = {};
 
 //----------------------Métodos para la Web--------------------------
 
-
+//Vista de Usuario para la parte web
 ArtistController.viewAddArtist = (req, res) => {
   res.render("dashboard", { title: "Agregar Artista", fragment: "fragments/artist/addArtist" });
 };
@@ -38,7 +38,7 @@ ArtistController.viewAddImageArtist = (req, res) => {
   });
 };
 
-ArtistController.viewListArtist = (req,res)=>{
+ArtistController.viewListArtist = (req, res) => {
   Artist.findAll({
     where: { status: true },
     order: [
@@ -90,35 +90,6 @@ ArtistController.saveArtist = (req, res) => {
 };
 
 /**
- * @api {get} /artist/artist/:external obtención de un artista por su atributo external id
- * @apiName getArtist
- * @apiGroup Artist
- * @apiDescription El método obtiene un artitas mediante su external id
- * 
- * 
- * @apiSuccess {json} artist objeto obtenido del modelo artista
- * @apiSuccessExample Sucess-Response:
- * HTTP/1.1 200 OK
- *
- *     {
- * name: "Nombre Artista 1"
- * description: "Descripcion Artista 1"
- *     }
- *
- * 
- */
-ArtistController.getArtist = (req, res) => {
-  Artist.findOne({
-    where: { external_id: req.params.external },
-    include: [{ model: Album, include: { model: Song } }]
-  }).then((artist) => {
-    res.status(200).send(artist);
-  }).catch((err) => {
-    res.status(500).send({ message: 'Error en la peticion' });
-  });
-};
-
-/**
  * @api {get} /artist/artists listado de los artistas
  * @apiName getArtists
  * @apiGroup Artist
@@ -151,6 +122,35 @@ ArtistController.getArtists = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
+
+/**
+ * @api {get} /artist/artist/:external obtención de un artista por su atributo external id
+ * @apiName getArtist
+ * @apiGroup Artist
+ * @apiDescription El método obtiene un artitas mediante su external id
+ * 
+ * 
+ * @apiSuccess {json} artist objeto obtenido del modelo artista
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ *
+ *     {
+ * name: "Nombre Artista 1"
+ * description: "Descripcion Artista 1"
+ *     }
+ *
+ */
+ArtistController.getArtist = (req, res) => {
+  Artist.findOne({
+    where: { external_id: req.params.external },
+    include: [{ model: Album, include: { model: Song } }]
+  }).then((artist) => {
+    res.status(200).send(artist);
+  }).catch((err) => {
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
 /**
  * @api {post} /artist/updateArtist/:external  Actualiza la información del Artista
  * @apiName updateArtist
@@ -164,8 +164,7 @@ ArtistController.getArtists = (req, res) => {
  *      {
  *         name: "Nombre Artista "
  *         description: "Descripcion Artista " 
- *      }
- * 
+ *      } 
  * 
  * @apiSuccess {flashNotification} popup "Se ha actualizado correctamente el artista"
  */
@@ -201,14 +200,10 @@ ArtistController.updateArtist = (req, res) => {
  *        external:48d0a02df461f0519b1c,
  *        artist:1
  *      }
- * 
- * 
  * @apiSuccess {flashNotification} popup "Se ha eliminado correctamente"
- * 
  */
 
 ArtistController.deleteArtist = (req, res) => {
-
   Artist.update({ status: false }, { where: { external_id: req.params.external } })
     .then((result) => {
       if (result == 0) {
@@ -246,22 +241,40 @@ ArtistController.deleteArtist = (req, res) => {
                         });
                         Song.update({ status: false }, { where: { id: idsongs } });
                       })
-                      req.flash('GOOD', 'Se ha eliminado el artista de manera correcta.','/artist/updateArtist');
+                    req.flash('GOOD', 'Se ha eliminado el artista de manera correcta.', '/artist/updateArtist');
                   }
                 }
               }
             });
         }).catch((err) => {
           console.log(err);
-          req.flash('BAD', 'Error al eliminar el artista','/artist/updateArtist');
+          req.flash('BAD', 'Error al eliminar el artista', '/artist/updateArtist');
         });
       }
     }).catch((err) => {
       console.log(err);
-      req.flash('BAD', 'Error al eliminar el artista','/artist/updateArtist');
+      req.flash('BAD', 'Error al eliminar el artista', '/artist/updateArtist');
     });
 };
 
+ArtistController.searchArtist = (req, res) => {
+  //const Op = Sequelize.Op;
+  
+  Artist.findAll({
+    where: {
+      name: {
+        [Op.like]: '%'+ req.body.search + '%'
+      }
+    }
+  }).then((artists) => {
+    res.status(200).send(artists);
+  }).catch((err) => {
+    console.log(err);
+    req.flash('BAD', 'Error al buscar el artista', '/artist/updateArtist');
+  });
+
+
+};
 
 /**
  * @api {post} /artist/upload-image-artist  Actualiza el atributo image del artista en la base de datos.
@@ -279,7 +292,6 @@ ArtistController.deleteArtist = (req, res) => {
  * @apiSuccess {flashNotification} popup "Se actualizado de manera correcta el artista"
  * 
  */
-
 ArtistController.uploadImage = (req, res) => {
 
   var file_name = "Imagen no encontrada";
@@ -288,8 +300,8 @@ ArtistController.uploadImage = (req, res) => {
     var file_path = req.files.image.path;
     var file_split = file_path.split('\\');
     // var file_split = file_path.split('\/'); //Para MAC
-    var file_name = file_split[file_split.length-1];
-    
+    var file_name = file_split[file_split.length - 1];
+
 
     var ext_split = file_name.split('\.');
     var file_ext = ext_split[1];
@@ -299,19 +311,19 @@ ArtistController.uploadImage = (req, res) => {
         where: { external_id: req.body.external }
       }).then((result) => {
         if (result == 0) {
-          req.flash('OK', "No se ha podido actualizar el artista","/artist/addImageArtist");
+          req.flash('OK', "No se ha podido actualizar el artista", "/artist/addImageArtist");
         } else {
-          req.flash('GOOD', "Se ha subido la Imagen del Artista con éxito","/artist/addImageArtist");
+          req.flash('GOOD', "Se ha subido la Imagen del Artista con éxito", "/artist/addImageArtist");
         }
       }).catch((err) => {
         console.log(err);
-        req.flash("BAD", "Error al subir la imagen del artista","/artist/addImageArtist");
+        req.flash("BAD", "Error al subir la imagen del artista", "/artist/addImageArtist");
       });
     } else {
-      req.flash('OK', "La extension del archivo no es correcta","/artist/addImageArtist");
+      req.flash('OK', "La extension del archivo no es correcta", "/artist/addImageArtist");
     }
   } else {
-    req.flash('OK', "Ocurrio un error al intentar subir la imagen","/artist/addImageArtist");
+    req.flash('OK', "Ocurrio un error al intentar subir la imagen", "/artist/addImageArtist");
   }
 };
 

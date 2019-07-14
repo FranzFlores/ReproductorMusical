@@ -68,7 +68,7 @@ PlayListController.viewDetailsPlaylist = (req, res) => {
   }).then((playList) => {
     playList.getSongs()
       .then((list) => {
-        res.render("dashboard", { title: "Detalles de Playlist", fragment: "fragments/playlist/details", songs:list,playlist:playList });
+        res.render("dashboard", { title: "Detalles de Playlist", fragment: "fragments/playlist/details", songs: list, playlist: playList });
       }).catch((err) => {
         console.log(err);
         res.status(500).send({ message: 'Error en la peticion' });
