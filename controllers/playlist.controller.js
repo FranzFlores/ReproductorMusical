@@ -16,11 +16,69 @@ PlayListController.viewMyPlaylist = (req, res) => {
       userId: req.params.user
     }
   }).then((list) => {
-    res.render("dashboard", { title: "Mis Playlist", fragment: "fragments/playlist/myPlaylist",playlists:list });
+    res.render("dashboard", { title: "Mis Playlist", fragment: "fragments/playlist/myPlaylist", playlists: list });
   }).catch((err) => {
+    console.log(err);
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
+
+PlayListController.viewExplore = (req, res) => {
+  User.findOne({
+    where: { roleId: 1 }
+  }).then((user) => {
+    PlayList.findAll({
+      where: { userId: user.id }
+    }).then((list) => {
+      res.render("dashboard", { title: "Mis Playlist", fragment: "fragments/playlist/explore", playlists: list });
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).send({ message: 'Error en la peticion' });
+    });
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
+PlayListController.viewEditPlaylist = (req, res) => {
+  PlayList.findOne({
+    where: { external_id: req.params.external_id }
+  }).then((playlist) => {
+
+    Song.findAll({
+      where: { status: true },
+      order: ['title']
+    }).then((list) => {
+      res.render("dashboard", { title: "Editar Playlist", fragment: "fragments/playlist/editPlaylist", songs: list, playlist: playlist });
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).send({ message: 'Error en la peticion' });
+    });
+
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
+PlayListController.viewDetailsPlaylist = (req, res) => {
+  PlayList.findOne({
+    where: { external_id: req.params.external_id }
+  }).then((playList) => {
+    playList.getSongs()
+      .then((list) => {
+        res.render("dashboard", { title: "Detalles de Playlist", fragment: "fragments/playlist/details", songs:list,playlist:playList });
+      }).catch((err) => {
+        console.log(err);
+        res.status(500).send({ message: 'Error en la peticion' });
+      });
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
 
 /**
  * @api {post} /playlist/savePlayList Guarda información de la playlist
@@ -85,11 +143,10 @@ PlayListController.addSongtoPlayList = (req, res) => {
     where: { id: req.body.playlist }
   }).then((playListResult) => {
     playListResult.setSongs(req.body.songs);
-    req.flash('success', 'Se ha agregado correctamente las canciones');
-    res.redirect('/profile');
+    res.status(200).send('ok');
   }).catch((err) => {
     console.log(err);
-    res.status(500).send({ message: 'Error en la peticion 2' });
+    res.status(500).send("error");
   });
 };
 
@@ -347,14 +404,22 @@ PlayListController.uploadImage = (req, res) => {
 PlayListController.getImageFile = (req, res) => {
   var imageFile = req.params.imageFile;
   var path_file = './uploads/playLists/' + imageFile;
+  var default_file = './public/img/playlist.jpg';
 
   fs.exists(path_file, function (exists) {
     if (exists) {
       res.sendFile(path.resolve(path_file));
     } else {
-      res.status(200).send({ message: "No existe la imagen" });
+      fs.exists(default_file, (exists) => {
+        if (exists) {
+          res.sendFile(path.resolve(default_file));
+        } else {
+          res.status(200).send({ message: "No existe la imagen" });
+        }
+      });
     }
   });
+
 };
 
 

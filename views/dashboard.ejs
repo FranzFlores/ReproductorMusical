@@ -10,7 +10,7 @@
     <meta name="author" content="">
 
     <title>
-        dashboard
+        <%=title%>
     </title>
 
     <!--Favicon-->
@@ -128,7 +128,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="playlistMenu">
                     <a class="dropdown-item" href="/playlist/addPlaylist">Crear Playlist</a>
-                    <a class="dropdown-item" href="/playlist/myPlaylist">Ver mi Playlist</a>
+                    <a class="dropdown-item" href="/playlist/myPlaylist/<%=user.id%>">Ver mi Playlist</a>
                     <a class="dropdown-item" href="/playlist/explore">Explorar</a>
                 </div>
             </li>
