@@ -23,6 +23,25 @@ PlayListController.viewMyPlaylist = (req, res) => {
   });
 };
 
+PlayListController.viewExplore = (req,res)=>{
+  User.findOne({
+    where: { roleId: 1 }
+  }).then((user) => {
+    PlayList.findAll({
+      where: { userId: user.id }
+    }).then((list) => {
+      res.render("dashboard", { title: "Mis Playlist", fragment: "fragments/playlist/explore", playlists: list });
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).send({ message: 'Error en la peticion' });
+    });
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+};
+
+
 /**
  * @api {post} /playlist/savePlayList Guarda información de la playlist
  * @apiName savePlayList
