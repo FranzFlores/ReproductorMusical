@@ -3,7 +3,7 @@
     <div class="row">
         <% playlists.forEach(function(playlist){ %>
         <div class="col-md-4">
-            <div class="card">
+            <div class="card text-center">
                 <img style="height:261px;" class="card-img-top"
                     src="http://localhost:3000/playlist/get-image-playList/<%=playlist.image%>" alt="">
                 <div class="card-body">
@@ -13,6 +13,6 @@
                 </div>
             </div>
         </div>
-        })%>
+        <% });%>
     </div>
 </div>
