@@ -301,7 +301,8 @@ PlayListController.uploadImage = (req, res) => {
 
   if (req.files) {
     var file_path = req.files.image.path;
-    var file_split = file_path.split('\/');
+    // var file_split = file_path.split('\/'); Para Mac
+    var file_split = file_path.split('\\');
     var file_name = file_split[2];
 
     var ext_split = file_name.split('\.');
@@ -312,11 +313,10 @@ PlayListController.uploadImage = (req, res) => {
         where: { external_id: req.params.id }
       }).then((result) => {
         if (result == 0) {
-          req.flash('message', "No se ha podido actualizar la playlist");
+          req.flash('OK', "No se ha podido actualizar la playlist");
         } else {
-          req.flash('success', "Se ha subido la Imagen de la playlist con éxito");
+          req.flash('GOOD', "Se ha subido la Imagen de la playlist con éxito");
         }
-        res.redirect('/profile');
       }).catch((err) => {
         res.status(500).send({ message: 'Error en la peticion' });
       });
