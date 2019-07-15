@@ -1,0 +1,81 @@
+<div class="container">
+    <h3 class="text-center"><%=playlist.title%></h3>
+    <p class="text-center h6"><%=playlist.description%></p>
+    <p class="text-center">Selecciona las mejores canciones para la lista de reproducción</p>
+    <div class="message"></div>
+    <ul class="list-group" id="listAdd">
+        <%songs.forEach(function(song){%>
+
+        <li class="list-group-item">
+            <%=song.title%>
+            <button data-external="<%=song.id%>" type="button" id="add" data-add="true"
+                class="btn btn-primary float-right add">Agregar</button>
+        </li>
+        <% })%>
+    </ul>
+    <button class="btn btn-success btn-block mt-3" id="save">
+        Guardar
+    </button>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        var songs = [];
+        var playlistId = "<%=playlist.id%>";
+
+        //Cambiar de Estilo al button entre Guardar y Cancelar
+        $(".add").click(function (e) {
+            var external = $(this).attr('data-external');
+            if ($(this).attr('data-add') == 'true') {
+                $(this).removeClass('btn-primary').addClass('btn-danger');
+                $(this).text('Cancelar');
+                $(this).attr('data-add', 'false');
+                songs.push(external);
+            } else {
+                $(this).removeClass('btn-danger').addClass('btn-primary');
+                $(this).text('Agregar');
+                $(this).attr('data-add', 'true');
+                songs.pop();
+            }
+            e.preventDefault();
+        });
+
+        $("#save").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/playlist/addSongs",
+                data: {
+                    playlist: playlistId,
+                    songs: songs
+                },
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data);
+                    location.reload();
+                    var html = "";
+                    if (data.localeCompare('ok') == 0) {
+                        html = `<div class="alert alert-success alert-dismissible fade show" role="alert">
+                            Se ha guardado correctamente las canciones
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>`;
+                    } else {
+                        html = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            No se pudo guardar las canciones la playlist
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>`;
+                    }
+                    $(".message").html(html);
+                        
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        });
+
+
+    });
+</script>

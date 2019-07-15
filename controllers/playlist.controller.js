@@ -23,7 +23,7 @@ PlayListController.viewMyPlaylist = (req, res) => {
   });
 };
 
-PlayListController.viewExplore = (req,res)=>{
+PlayListController.viewExplore = (req, res) => {
   User.findOne({
     where: { roleId: 1 }
   }).then((user) => {
@@ -39,6 +39,28 @@ PlayListController.viewExplore = (req,res)=>{
     console.log(err);
     res.status(500).send({ message: 'Error en la peticion' });
   });
+};
+
+PlayListController.viewEditPlaylist = (req, res) => {
+  PlayList.findOne({
+    where: { external_id: req.params.external_id }
+  }).then((playlist) => {
+
+    Song.findAll({
+      where: { status: true },
+      order: ['title']
+    }).then((list) => {
+      res.render("dashboard", { title: "Editar Playlist", fragment: "fragments/playlist/editPlaylist", songs: list, playlist: playlist });
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).send({ message: 'Error en la peticion' });
+    });
+
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
+
 };
 
 
@@ -105,11 +127,10 @@ PlayListController.addSongtoPlayList = (req, res) => {
     where: { id: req.body.playlist }
   }).then((playListResult) => {
     playListResult.setSongs(req.body.songs);
-    req.flash('success', 'Se ha agregado correctamente las canciones');
-    res.redirect('/profile');
+    res.status(200).send('ok');
   }).catch((err) => {
     console.log(err);
-    res.status(500).send({ message: 'Error en la peticion 2' });
+    res.status(500).send("error");
   });
 };
 
