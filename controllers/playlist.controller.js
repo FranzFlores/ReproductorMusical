@@ -60,7 +60,23 @@ PlayListController.viewEditPlaylist = (req, res) => {
     console.log(err);
     res.status(500).send({ message: 'Error en la peticion' });
   });
+};
 
+PlayListController.viewDetailsPlaylist = (req, res) => {
+  PlayList.findOne({
+    where: { external_id: req.params.external_id }
+  }).then((playList) => {
+    playList.getSongs()
+      .then((list) => {
+        res.render("dashboard", { title: "Detalles de Playlist", fragment: "fragments/playlist/details", songs:list,playlist:playList });
+      }).catch((err) => {
+        console.log(err);
+        res.status(500).send({ message: 'Error en la peticion' });
+      });
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send({ message: 'Error en la peticion' });
+  });
 };
 
 
