@@ -19,7 +19,16 @@ const UserController = {};
  * 
  */
 UserController.viewDashBoard = (req, res) => {
-    res.render("dashboard", { title: "Magic Music", fragment: "fragments/index" });
+    Artist.findAll({
+        where:{status:true},
+        order:[
+          ['name','ASC']
+        ]
+      }).then((list) => {
+        res.render("dashboard", { title: "Magic Music", fragment: "fragments/index", artists: list });
+      }).catch((err) => {
+        res.status(500).send({ message: 'Error en la peticion' });
+      });
 };
 
 /**
