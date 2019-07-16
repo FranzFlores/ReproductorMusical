@@ -292,16 +292,16 @@ ArtistController.searchArtist = (req, res) => {
  * @apiSuccess {flashNotification} popup "Se actualizado de manera correcta el artista"
  * 
  */
+
 ArtistController.uploadImage = (req, res) => {
 
   var file_name = "Imagen no encontrada";
 
   if (req.files) {
     var file_path = req.files.image.path;
-    var file_split = file_path.split('\\');
-    // var file_split = file_path.split('\/'); //Para MAC
+    //var file_split = file_path.split('\\');
+    var file_split = file_path.split('\/'); //Para MAC
     var file_name = file_split[file_split.length - 1];
-
 
     var ext_split = file_name.split('\.');
     var file_ext = ext_split[1];

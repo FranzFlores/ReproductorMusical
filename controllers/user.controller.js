@@ -272,7 +272,7 @@ UserController.registerUser = (req, res) => {
             } else {
                 //Crear un usuario
                 var hash = helpers.generateHash(req.body.password);
-                Role.findOne({ where: { name: "Administrador" } })
+                Role.findOne({ where: { name: "Usuario" } })
                     .then((role) => {
                         if (role) {
                             var modelUser = {
