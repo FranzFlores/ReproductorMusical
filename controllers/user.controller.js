@@ -258,7 +258,7 @@ UserController.registerUser = (req, res) => {
         { name: 'Usuario' }
     ];
 
-    Role.findOne({ where: { name: 'Administrador' } })
+    Role.findOne({ where: { name: 'Usuario' } })
         .then((role) => {
             if (!role) {
                 Role.bulkCreate(rolesNames);
