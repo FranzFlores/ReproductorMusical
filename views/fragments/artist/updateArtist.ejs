@@ -4,7 +4,7 @@
     <div class="row artistEdit" id="list">
         <%artists.forEach(function(artist){ %>
         <div class="col-md-4">
-            <div class="card">
+            <div class="card mb-2">
                 <a href="#" class="mx-auto" data-external="<%=artist.external_id%>" data-toggle="modal"
                     data-target="#id<%=artist.external_id%>">
                     <img class="card-img-top" style="height:250px; width:250px"
@@ -32,8 +32,8 @@
                             <div class="modal-body">
                                 <form action="/artist/deleteArtist/<%=artist.external_id%>" method="POST">
                                     <input name="artist" value="<%=artist.id%>" hidden>
-                                    <h5 class="card-title text-center">¿Está seguro de eliminar el artista
-                                        <%=artist.name%>?</h5>
+                                    <p class="card-title text-center">¿Está seguro de eliminar el artista
+                                        <%=artist.name%>?</p>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-success">Eliminar</button>
                                         <button type="button" class="btn btn-danger"

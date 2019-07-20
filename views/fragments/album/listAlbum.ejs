@@ -4,7 +4,7 @@
     <div class="row">
         <%albums.forEach(function(album){ %>
         <div class="col-md-4">
-            <div class="card">
+            <div class="card mb-2">
                 <a href="#" class="mx-auto" data-external="<%=album.external_id%>" data-toggle="modal"
                     data-target="#id<%=album.external_id%>">
                     <img class="card-img-top" style="height:250px; width:250px"
@@ -35,7 +35,7 @@
                             <div class="modal-body">
                                 <form action="/album/deleteAlbum/<%=album.external_id%>" method="POST">
                                     <input name="album" value="<%=album.id%>" hidden>
-                                    <h5 class="text-center">¿Está seguro de eliminar el Album <%= album.title %>?</h5>
+                                    <p class="text-center">¿Está seguro de eliminar el Album <%= album.title %>?</p>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-success">Eliminar</button>
                                         <button type="button" class="btn btn-danger"
