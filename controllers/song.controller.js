@@ -280,13 +280,13 @@ SongController.deleteSong = (req, res) => {
       where: { external_id: req.params.external }
     }).then((song) => {
       if (song == 0) {
-        req.flash('message', 'No se pudo eliminar la canción');
+        req.flash('OK', 'No se pudo eliminar la canción',"/song/listSong");
       } else {
-        req.flash('success', 'Se ha elimanado la canción con éxito');
+        req.flash('GOOD', 'Se ha elimanado la canción con éxito',"/song/listSong");
       }
-      res.redirect('/profile');
     }).catch((err) => {
-      res.status(500).send({ message: 'Error en la peticion' });
+      console.log(err);
+      req.flash('BAD', 'Error al eliminar la canción',"/song/listSong");
     });
 };
 
