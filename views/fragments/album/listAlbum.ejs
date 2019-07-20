@@ -13,7 +13,7 @@
                 <h4 class="text-center"><%=album.title%></h4>
 
                 <div class="card-body mx-auto">
-                    <%if(user.role = "Administrador"){%>
+                    <%if(user.role == "Administrador"){%>
                     <div class="buttons">
                         <button type="button" data-toggle="modal" data-target="#id<%=album.external_id%>"
                             data-external="<%=album.external_id%>" class="btn btn-success">Editar</button>
@@ -82,10 +82,10 @@
                         </div>
                     </div>
                 </div>
-                <%}else{%>
+                <%}else if(user.role == "Usuario"){%>
                 <div class="card-body mx-auto">
                     <div class="buttons">
-                        <button type="submit" class="btn btn-primary">Ver más</button>
+                            <a href="/album/detailsAlbum/<%=album.external_id%>" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
                 <%}%>
