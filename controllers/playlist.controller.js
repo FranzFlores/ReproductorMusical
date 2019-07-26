@@ -2,7 +2,7 @@
 var fs = require('fs');
 var path = require('path');
 
-const { PlayList, User, Song } = require('../database');
+const { PlayList, User,Album,Artist, Song } = require('../database');
 const PlayListController = {};
 
 PlayListController.viewAddPlaylist = (req, res) => {
@@ -287,13 +287,17 @@ PlayListController.getListSongs = (req, res) => {
   PlayList.findOne({
     where: { external_id: req.params.playlist }
   }).then((playList) => {
-    playList.getSongs()
+    playList.getSongs({
+      include: [{ model: Album, attributes: ['image','title'], include: { model: Artist, attributes: ['name'] } }]
+    })
       .then((list) => {
         res.status(200).send(list);
       }).catch((err) => {
+        console.log(err);
         res.status(500).send({ message: 'Error en la peticion' });
       });
   }).catch((err) => {
+    console.log(err);
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };

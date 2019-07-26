@@ -135,7 +135,8 @@ AlbumController.getAlbums = (req, res) => {
         where: { status: true },
         order: [
             ['title', 'ASC']
-        ]
+        ],
+        include: [{ model: Artist}]
     }).then((list) => {
         res.status(200).send(list);
     }).catch((err) => {

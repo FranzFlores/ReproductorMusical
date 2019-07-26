@@ -15,7 +15,7 @@ router.get('/detailsAlbum/:external_id',isLoggedIn,albumController.viewDetailsAl
 router.get('/addImageAlbum',isLoggedIn,albumController.viewAddImageAlbum);
 
 
-router.get('/albums',isLoggedIn,albumController.getAlbums);
+router.get('/albums',albumController.getAlbums);
 router.get('/:external',isLoggedIn,albumController.getAlbum);
 router.post('/saveAlbum',isLoggedIn,albumController.saveAlbum);
 router.post('/updateAlbum/:external',isLoggedIn,albumController.updateAlbum);
