@@ -175,6 +175,20 @@ AlbumController.getAlbum = (req, res) => {
     });
 };
 
+AlbumController.getSongsAlbum = (req,res)=>{
+    Album.findOne({
+        where: { external_id: req.params.external },
+        include: [{ model: Song, where: { status: true } }],
+        order: [
+            [Song, 'number', 'ASC']
+        ]
+    }).then((album) => {
+        res.status(200).send(album);
+    }).catch((err) => {
+        res.status(500).send({ message: 'Error en la peticion' });
+    });
+}
+
 /**
  * @api {post} /album/updateAlbum/:external  Actualiza la información del Artista
  * @apiName updateAlbum
