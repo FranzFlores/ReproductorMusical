@@ -7,8 +7,7 @@ const { Role, User, Artist } = require('../database');
 const jwt = require('../lib/jwt');
 const UserController = {};
 
-//----------------------Métodos para la Web--------------------------
-
+//----------------------------------Vistas-----------------------------
 /**
  * @api {get} /user/dashboard Muestra la vista de perfil de usuario cuando se inicia sesión
  * @apiName viewDashBoard
@@ -68,6 +67,80 @@ UserController.viewUpdatePassword = (req, res) => {
  */
 UserController.viewUpdateImage = (req, res) => {
     res.render("dashboard", { title: "Magic Music", fragment: "fragments/user/updateImage" });
+};
+
+
+/**
+ * @api {post} /signup Registra un nuevo usuario para el sistema
+ * @apiName registerUser
+ * @apiGroup User
+ * @apiDescription El método permite el registro de un nuevo usuario en el sistema y crea los roles del sistema.
+ * 
+ * @apiParam {String}           firstName            El nombre del usuario a registrar.
+ * @apiParam {String}           lastName             El apellido del usuario a registrar.
+ * @apiParam {String}           email                El correo electrónico del usuario a registrar.
+ * @apiParam {String}           password             La contraseña para la cuenta del usuario.
+ * 
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *         firstName:"Nombre Usuario",
+ *         lastName: "Apellido Usuario", 
+ *         email: "correo@gmail.com",
+ *         password: "contraseña Usuario"
+ *      }
+ * 
+ * @apiSuccess {flashNotification} popup "El usuario se ha creado satisfactoriamente"
+ * 
+ */
+UserController.registerUser = (req, res) => {
+
+    var rolesNames = [
+        { name: 'Administrador' },
+        { name: 'Usuario' }
+    ];
+
+    Role.findOne({ where: { name: 'Usuario' } })
+        .then((role) => {
+            if (!role) {
+                Role.bulkCreate(rolesNames);
+            }
+        });
+
+    User.findOne({ where: { email: req.body.email } })
+        .then((user) => {
+            if (user) {
+                req.flash('OK', 'El usuario ya existe', "/signup");
+            } else {
+                //Crear un usuario
+                var hash = helpers.generateHash(req.body.password);
+                Role.findOne({ where: { name: "Usuario" } })
+                    .then((role) => {
+                        if (role) {
+                            var modelUser = {
+                                firstName: req.body.firstName,
+                                lastName: req.body.lastName,
+                                email: req.body.email,
+                                image: 'user.png',
+                                password: hash,
+                                roleId: role.id
+                            }
+                            User.create(modelUser)
+                                .then((newUser, created) => {
+                                    if (!newUser) {
+                                        req.flash('OK', 'No se ha podido crear el usuario', "/signup");
+                                    } else {
+                                        console.log(newUser);
+                                        req.flash('GOOD', 'El usuario se ha creado satisfactoriamente', "/signin");
+                                    }
+                                });
+                        } else {
+                            req.flash('BAD', 'Ha ocurrido un error al crear el usuario', "/signup");
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+            }
+        });
 };
 
 
@@ -251,60 +324,29 @@ UserController.getImageFile = (req, res) => {
 
 };
 
-UserController.registerUser = (req, res) => {
-
-    var rolesNames = [
-        { name: 'Administrador' },
-        { name: 'Usuario' }
-    ];
-
-    Role.findOne({ where: { name: 'Usuario' } })
-        .then((role) => {
-            if (!role) {
-                Role.bulkCreate(rolesNames);
-            }
-        });
-
-    User.findOne({ where: { email: req.body.email } })
-        .then((user) => {
-            if (user) {
-                req.flash('OK', 'El usuario ya existe', "/signup");
-            } else {
-                //Crear un usuario
-                var hash = helpers.generateHash(req.body.password);
-                Role.findOne({ where: { name: "Usuario" } })
-                    .then((role) => {
-                        if (role) {
-                            var modelUser = {
-                                firstName: req.body.firstName,
-                                lastName: req.body.lastName,
-                                email: req.body.email,
-                                image: 'user.png',
-                                password: hash,
-                                roleId: role.id
-                            }
-                            User.create(modelUser)
-                                .then((newUser, created) => {
-                                    if (!newUser) {
-                                        req.flash('OK', 'No se ha podido crear el usuario', "/signup");
-                                    } else {
-                                        console.log(newUser);
-                                        req.flash('GOOD', 'El usuario se ha creado satisfactoriamente', "/signin");
-                                    }
-                                });
-                        } else {
-                            req.flash('BAD', 'Ha ocurrido un error al crear el usuario', "/signup");
-                        }
-                    }).catch((err) => {
-                        console.log(err);
-                    });
-            }
-        });
-};
-
 
 //----------------------Métodos para la Aplicacion Movil--------------------------
-
+/**
+ * @api {post} /user/login  Permite el inicio de sesión al usuario en la parte movil.
+ * @apiName uploadImage
+ * @apiGroup User
+ * @apiDescription El método permite iniciar sesión al ususario mediante el uso de tokens de la libreria jwt.
+ * 
+ * @apiParam {String}           email                El correo electrónico del usuario a registrar.
+ * 
+ * @apiParamExample {json} Request-Example:
+ *      {
+ *         email:"usuario@gmail.com"
+ *      }
+ * 
+ * @apiSuccess {json} token
+ * @apiSuccessExample Sucess-Response:
+ * HTTP/1.1 200 OK
+ *   {
+ *    token:"fdjklsjlskdjgfskjlkvdkljkl,jfkldssklfmkljfldks",
+ *  }
+ * 
+ */
 UserController.login = (req, res) => {
     User.findOne({ where: { email: req.body.email } })
         .then((user) => {
@@ -327,6 +369,5 @@ UserController.login = (req, res) => {
             res.status(500).send({ message: 'Error en la peticion' });
         });;
 };
-
 
 module.exports = UserController;

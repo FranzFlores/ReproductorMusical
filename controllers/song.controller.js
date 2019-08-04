@@ -352,7 +352,6 @@ SongController.uploadFile = (req, res) => {
  * @apiSuccess {file} Archivo de audio de la cancion.
  * 
  */
-
 SongController.getSongFile = (req, res) => {
   var songFile = req.params.songFile;
   var path_file = './uploads/songs/' + songFile
