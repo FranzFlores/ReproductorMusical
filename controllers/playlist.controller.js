@@ -5,10 +5,27 @@ var path = require('path');
 const { PlayList, User,Album,Artist, Song } = require('../database');
 const PlayListController = {};
 
+/**
+ * @api {get} /playlist/addPlaylist Muestra la vista de agregar Playlist.
+ * @apiName viewAddPlaylist
+ * @apiGroup Playlist
+ * @apiDescription El método renderiza la vista de agregar Playlist.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 PlayListController.viewAddPlaylist = (req, res) => {
   res.render("dashboard", { title: "Agregar Playlist", fragment: "fragments/playlist/addPlaylist" });
 };
-
+/**
+ * @api {get} /playlist/myPlaylist Muestra la vista de las playlist que tiene el usuario
+ * @apiName viewMyPlaylist
+ * @apiGroup Playlist
+ * @apiDescription El método renderiza la vista de playlist para mostrar las playlist del usuario
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 PlayListController.viewMyPlaylist = (req, res) => {
   PlayList.findAll({
     where: {
@@ -23,6 +40,15 @@ PlayListController.viewMyPlaylist = (req, res) => {
   });
 };
 
+/**
+ * @api {get} /playlist/explore Muestra la vista de todas las playlist que tiene el usuario
+ * @apiName viewExplore
+ * @apiGroup Playlist
+ * @apiDescription El método renderiza la vista de todas las playlist que tiene el usuario
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 PlayListController.viewExplore = (req, res) => {
   User.findOne({
     where: { roleId: 1 }
@@ -41,6 +67,15 @@ PlayListController.viewExplore = (req, res) => {
   });
 };
 
+/**
+ * @api {get} /playlist/editPlaylist Muestra la vista de editar la playlist
+ * @apiName viewEditPlaylist
+ * @apiGroup Playlist
+ * @apiDescription El método renderiza la vista de editar la playlist
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 PlayListController.viewEditPlaylist = (req, res) => {
   PlayList.findOne({
     where: { external_id: req.params.external_id }
@@ -62,6 +97,15 @@ PlayListController.viewEditPlaylist = (req, res) => {
   });
 };
 
+/**
+ * @api {get} /playlist/details Muestra la vista de detalles de Playlist.
+ * @apiName viewDetailsPlaylist
+ * @apiGroup Playlist
+ * @apiDescription El método renderiza la vista de detalles de Playlist.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 PlayListController.viewDetailsPlaylist = (req, res) => {
   PlayList.findOne({
     where: { external_id: req.params.external_id }
