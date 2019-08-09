@@ -23,6 +23,15 @@ var options = {
   })
 };
 
+/**
+ * @api {get} /Song/addSong Muestra la vista de agregar canción.
+ * @apiName viewAddSong
+ * @apiGroup Song
+ * @apiDescription El método renderiza la vista de agregar canción.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 SongController.viewAddSong = (req, res) => {
   Album.findAll({
     where: { status: true },
@@ -36,6 +45,15 @@ SongController.viewAddSong = (req, res) => {
   });
 };
 
+/**
+ * @api {get} /Song/listSong Muestra la vista con una lista de todas las canciones.
+ * @apiName viewListSong 
+ * @apiGroup Song
+ * @apiDescription El método renderiza la vista con una lista de todas las canciones.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 SongController.viewListSong = (req, res) => {
   Song.findAll({
     where: { status: true },
@@ -49,6 +67,15 @@ SongController.viewListSong = (req, res) => {
   });
 };
 
+/**
+ * @api {get} /Song/addFileSong Muestra la vista de agregar un archivo a canción.
+ * @apiName viewAddFileSong
+ * @apiGroup Song
+ * @apiDescription El método renderiza la vista de agregar un archivo a canción.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 SongController.viewAddFileSong = (req, res) => {
   Song.findAll({
     where: { status: true },
