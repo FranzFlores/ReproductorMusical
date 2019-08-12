@@ -4,11 +4,12 @@ var path = require('path');
 
 const { PlayList, User,Album,Artist, Song } = require('../database');
 const PlayListController = {};
+
 /**
- * @api {get} /album/dashboard Muestra la vista de agregar una playlist
+ * @api {get} /playlist/addPlaylist Muestra la vista de agregar Playlist.
  * @apiName viewAddPlaylist
  * @apiGroup Playlist
- * @apiDescription La vista que sirve para agregar una playlist en la base de datos.
+ * @apiDescription El método renderiza la vista de agregar Playlist.
  * 
  * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
  * 
@@ -16,15 +17,7 @@ const PlayListController = {};
 PlayListController.viewAddPlaylist = (req, res) => {
   res.render("dashboard", { title: "Agregar Playlist", fragment: "fragments/playlist/addPlaylist" });
 };
-/**
- * @api {get} /album/dashboard Muestra la vista de reproducir una playlist
- * @apiName viewMyPlaylist
- * @apiGroup Playlist
- * @apiDescription La vista que sirve para reprodicir una playlist de la base de datos.
- * 
- * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
- * 
- */
+
 PlayListController.viewMyPlaylist = (req, res) => {
   PlayList.findAll({
     where: {
@@ -38,15 +31,7 @@ PlayListController.viewMyPlaylist = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-/**
- * @api {get} /album/dashboard Muestra la vista para explorar la playlist
- * @apiName viewExplore
- * @apiGroup Playlist
- * @apiDescription La vista que sirve para explorar la playlist en la base de datos.
- * 
- * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
- * 
- */
+
 PlayListController.viewExplore = (req, res) => {
   User.findOne({
     where: { roleId: 1 }
@@ -64,15 +49,7 @@ PlayListController.viewExplore = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-/**
- * @api {get} /album/dashboard Muestra la vista para editar la playlist
- * @apiName viewEditPlaylist
- * @apiGroup Playlist
- * @apiDescription La vista que sirve para explorar la playlist en la base de datos.
- * 
- * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
- * 
- */
+
 PlayListController.viewEditPlaylist = (req, res) => {
   PlayList.findOne({
     where: { external_id: req.params.external_id }
@@ -93,15 +70,7 @@ PlayListController.viewEditPlaylist = (req, res) => {
     res.status(500).send({ message: 'Error en la peticion' });
   });
 };
-/**
- * @api {get} /album/dashboard Muestra la vista para eliminar la playlist
- * @apiName viewDetailsPlaylist
- * @apiGroup Playlist
- * @apiDescription La vista que sirve para eliminar la playlist en la base de datos.
- * 
- * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
- * 
- */
+
 PlayListController.viewDetailsPlaylist = (req, res) => {
   PlayList.findOne({
     where: { external_id: req.params.external_id }
