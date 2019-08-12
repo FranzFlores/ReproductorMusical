@@ -7,7 +7,15 @@ const AlbumController = {};
 
 
 //----------------------Métodos para la Web--------------------------
-
+/**
+ * @api {get} /album/dashboard Muestra la vista de agregar un album
+ * @apiName viewAddAlbum
+ * @apiGroup Album
+ * @apiDescription La vista que sirve para agregar un álbum en la base de datos.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 AlbumController.viewAddAlbum = (req, res) => {
     Artist.findAll({
         where: { status: true },
@@ -20,7 +28,15 @@ AlbumController.viewAddAlbum = (req, res) => {
         res.status(500).send({ message: 'Error en la peticion' });
     });
 };
-
+/**
+ * @api {get} /album/dashboard Muestra la vista del listado de los albumes
+ * @apiName viewListAlbum 
+ * @apiGroup Album
+ * @apiDescription La vista que sirve para presentar un listado de álbunes.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 AlbumController.viewListAlbum = (req, res) => {
     Album.findAll({
         where: { status: true },
@@ -35,6 +51,15 @@ AlbumController.viewListAlbum = (req, res) => {
     });
 };
 
+/**
+ * @api {get} /album/dashboard Muestra la vista para dar de baja a un album
+ * @apiName viewDetailsAlbum 
+ * @apiGroup Album
+ * @apiDescription La vista que sirve para dar de baja a un álbum en la base de datos.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 AlbumController.viewDetailsAlbum = (req, res) => {    
     Album.findOne({
         where: { external_id: req.params.external_id },
@@ -52,7 +77,15 @@ AlbumController.viewDetailsAlbum = (req, res) => {
         res.status(500).send({ message: 'Error en la peticion' });
     });
 };
-
+/**
+ * @api {get} /album/dashboard Muestra la vista de agregar una imagen al album
+ * @apiName viewAddImageAlbum
+ * @apiGroup Album
+ * @apiDescription La vista que sirve para agregar una imagen al álbum en la base de datos.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 AlbumController.viewAddImageAlbum = (req, res) => {
     Album.findAll({
         where: { status: true },
