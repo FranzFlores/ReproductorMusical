@@ -259,11 +259,11 @@ ArtistController.deleteArtist = (req, res) => {
 
 ArtistController.searchArtist = (req, res) => {
   //const Op = Sequelize.Op;
-  
+
   Artist.findAll({
     where: {
       name: {
-        [Op.like]: '%'+ req.body.search + '%'
+        [Op.like]: '%' + req.body.search + '%'
       }
     }
   }).then((artists) => {
@@ -299,8 +299,11 @@ ArtistController.uploadImage = (req, res) => {
 
   if (req.files) {
     var file_path = req.files.image.path;
-    var file_split = file_path.split('\\');
-    //var file_split = file_path.split('\/'); //Para MAC
+    if (process.platform == 'darwin') {
+      var file_split = file_path.split('\/');
+    } else {
+      var file_split = file_path.split('\\');
+    }
     var file_name = file_split[file_split.length - 1];
 
     var ext_split = file_name.split('\.');

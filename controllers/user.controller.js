@@ -258,8 +258,11 @@ UserController.uploadImage = (req, res) => {
     var file_name = "Imagen no encontrada";
     if (req.files) {
         var file_path = req.files.image.path;
-        // var file_split = file_path.split('\/'); Para Mac
-        var file_split = file_path.split('\\');
+        if(process.platform == 'darwin'){
+            var file_split = file_path.split('\/');
+        }else{
+            var file_split = file_path.split('\\');
+        }
         var file_name = file_split[2];
 
         var ext_split = file_name.split('\.');

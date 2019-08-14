@@ -2,7 +2,7 @@
 var fs = require('fs');
 var path = require('path');
 
-const { PlayList, User,Album,Artist, Song } = require('../database');
+const { PlayList, User, Album, Artist, Song } = require('../database');
 const PlayListController = {};
 
 /**
@@ -297,7 +297,7 @@ PlayListController.getListSongs = (req, res) => {
     where: { external_id: req.params.playlist }
   }).then((playList) => {
     playList.getSongs({
-      include: [{ model: Album, attributes: ['image','title'], include: { model: Artist, attributes: ['name'] } }]
+      include: [{ model: Album, attributes: ['image', 'title'], include: { model: Artist, attributes: ['name'] } }]
     })
       .then((list) => {
         res.status(200).send(list);
@@ -371,8 +371,11 @@ PlayListController.uploadImage = (req, res) => {
 
   if (req.files) {
     var file_path = req.files.image.path;
-    // var file_split = file_path.split('\/'); Para Mac
-    var file_split = file_path.split('\\');
+    if (process.platform == 'darwin') {
+      var file_split = file_path.split('\/');
+    } else {
+      var file_split = file_path.split('\\');
+    }
     var file_name = file_split[2];
 
     var ext_split = file_name.split('\.');

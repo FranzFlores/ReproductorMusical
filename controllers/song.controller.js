@@ -173,7 +173,7 @@ SongController.updateListeners = (req, res) => {
 SongController.getSong = (req, res) => {
   Song.findOne({
     where: { external_id: req.params.external },
-    include: [{ model: Album, include:{model:Artist} }]
+    include: [{ model: Album, include: { model: Artist } }]
   }).then((song) => {
     res.status(200).send(song);
   }).catch((err) => {
@@ -214,7 +214,7 @@ SongController.getSongs = (req, res) => {
   Song.findAll({
     where: { status: true },
     order: ['title'],
-    include: [{ model: Album, attributes: ['image','title'], include: { model: Artist, attributes: ['name'] } }]
+    include: [{ model: Album, attributes: ['image', 'title'], include: { model: Artist, attributes: ['name'] } }]
   }).then((list) => {
     res.status(200).send(list);
   }).catch((err) => {
@@ -280,13 +280,13 @@ SongController.deleteSong = (req, res) => {
       where: { external_id: req.params.external }
     }).then((song) => {
       if (song == 0) {
-        req.flash('OK', 'No se pudo eliminar la canción',"/song/listSong");
+        req.flash('OK', 'No se pudo eliminar la canción', "/song/listSong");
       } else {
-        req.flash('GOOD', 'Se ha elimanado la canción con éxito',"/song/listSong");
+        req.flash('GOOD', 'Se ha elimanado la canción con éxito', "/song/listSong");
       }
     }).catch((err) => {
       console.log(err);
-      req.flash('BAD', 'Error al eliminar la canción',"/song/listSong");
+      req.flash('BAD', 'Error al eliminar la canción', "/song/listSong");
     });
 };
 
@@ -310,8 +310,11 @@ SongController.uploadFile = (req, res) => {
 
   if (req.files) {
     var file_path = req.files.file.path;
-    //var file_split = file_path.split('\/'); //Para MAC
-    var file_split = file_path.split('\\');
+    if (process.platform == 'darwin') {
+      var file_split = file_path.split('\/');
+    } else {
+      var file_split = file_path.split('\\');
+    }
     var file_name = file_split[file_split.length - 1];
 
     var ext_split = file_name.split('\.');
