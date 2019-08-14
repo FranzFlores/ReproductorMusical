@@ -242,24 +242,31 @@ PlayListController.getPlayListAdmin = (req, res) => {
  * 
  */
 PlayListController.createPlaylistRanking = (req, res) => {
-  Song.findAll({
-    where: { status: true },
-    order: [['listeners', 'DESC']],
-    limit: 25
-  }).then((list) => {
-    PlayList.findOne({
-      where: { external_id: '508104d0-cf74-4a9d-ad7d-42a0754f3ae0' }
-    }).then((playListResult) => {
-      playListResult.setSongs(list);
-      req.flash('success', 'Se ha agregado correctamente las canciones');
-      res.redirect('/profile');
-    }).catch((err) => {
-      console.log(err);
-      res.status(500).send({ message: 'Error en la peticion 2' });
-    });
+  PlayList.create({
+    title: "Más Escuchadas",
+    description: "Las 25 canciones más escuchadas de la plataforma",
+    status: true,
+    image: 'playlist.jpg',
+    userId: req.params.user
+  }).then((playListStored) => {
+    if (playListStored) {
+      Song.findAll({
+        where: { status: true },
+        order: [['listeners', 'DESC']],
+        limit: 25
+      }).then((list) => {
+        playListStored.setSongs(list);
+        req.flash('GOOD', 'Se ha creado correctamente la playlist ranking', "/playlist/addPlaylist");
+      }).catch((err) => {
+        console.log(err);
+        res.status(500).send({ message: 'Error en la peticion' });
+      });
+    } else {
+      req.flash('OK', 'No se pudo crear la Playlist', "/playlist/addPlaylist");
+    }
   }).catch((err) => {
     console.log(err);
-    res.status(500).send({ message: 'Error en la peticion' });
+    req.flash('BAD', 'Error al guardar la Playlist', "/playlist/addPlaylist");
   });
 };
 /**

@@ -150,6 +150,7 @@
                     <a class="dropdown-item" href="/playlist/addPlaylist">Crear Playlist</a>
                     <a class="dropdown-item" href="/playlist/myPlaylist/<%=user.id%>">Ver mi Playlist</a>
                     <a class="dropdown-item" href="/playlist/explore">Explorar</a>
+                    <button id="ranking" data-id="<%=user.id%>" class="btn-secondary">Generar Playlist Ranking</button>
                 </div>
             </li>
         </ul>
@@ -302,6 +303,21 @@
                 });
             });
         }
+
+        $('#ranking').click(function () {
+            var id = $(this).attr('data-id');
+            var url = "http://localhost:3000/playlist/ranking/"+id;
+
+            $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: url,
+                    success: function (data, textStatus, jqXHR) {
+                        console.log(data);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) { }
+                });
+        });
 
     </script>
 </body>
