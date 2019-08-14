@@ -307,13 +307,16 @@ AlbumController.uploadImage = (req, res) => {
 
     if (req.files) {
         var file_path = req.files.image.path;
-        //var file_split = file_path.split('\\');
-        var file_split = file_path.split('\/');// Para Mac
+        if(process.platform == 'darwin'){
+            var file_split = file_path.split('\/');
+        }else{
+            var file_split = file_path.split('\\');
+        }
         var file_name = file_split[file_split.length-1];
-
         var ext_split = file_name.split('\.');
         var file_ext = ext_split[1];
-
+        console.log(file_ext);
+        
         if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif'  || file_ext == 'jpeg') {
             Album.update({ image: file_name }, {
                 where: { external_id: req.body.external }
