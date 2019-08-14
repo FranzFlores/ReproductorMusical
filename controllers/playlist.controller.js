@@ -5,6 +5,15 @@ var path = require('path');
 const { PlayList, User,Album,Artist, Song } = require('../database');
 const PlayListController = {};
 
+/**
+ * @api {get} /playlist/addPlaylist Muestra la vista de agregar Playlist.
+ * @apiName viewAddPlaylist
+ * @apiGroup Playlist
+ * @apiDescription El método renderiza la vista de agregar Playlist.
+ * 
+ * @apiSuccess {html} Carga un archivo html con toda la informacion necesaria en la vista. 
+ * 
+ */
 PlayListController.viewAddPlaylist = (req, res) => {
   res.render("dashboard", { title: "Agregar Playlist", fragment: "fragments/playlist/addPlaylist" });
 };
