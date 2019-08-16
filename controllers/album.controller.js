@@ -243,7 +243,7 @@ AlbumController.getSongsAlbum = (req,res)=>{
  * @apiSuccess {flashNotification} popup "Se ha actualizado correctamente el album"
  * 
  */
-AlbumController.updateAlbum = (req, res) => {
+AlbumController.updateAlbum = (req, res) => {    
     Album.update({
         title: req.body.title,
         description: req.body.description,
@@ -257,7 +257,7 @@ AlbumController.updateAlbum = (req, res) => {
                 req.flash('GOOD', "Se ha actualizado correctamente el album", "/album/listAlbum");
             }
         }).catch((err) => {
-            console.log();
+            console.log(err);
             req.flash('BAD', "Se ha actualizado correctamente el album", "/album/listAlbum");
         });
 };
