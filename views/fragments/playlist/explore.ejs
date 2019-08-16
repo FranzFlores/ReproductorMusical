@@ -2,13 +2,15 @@
     <h3 class="text-center">Descubre las mejores Listas de Reproducción para ti</h3>
     <div class="row">
         <% playlists.forEach(function(playlist){ %>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-2">
             <div class="card text-center">
                 <img style="height:261px;" class="card-img-top"
                     src="http://localhost:3000/playlist/get-image-playList/<%=playlist.image%>" alt="">
                 <div class="card-body">
                     <h5 class="card-title"><%=playlist.title%></h5>
+                    <%if(user.role == "Administrador"){%>
                     <a href="/playlist/editPlaylist/<%=playlist.external_id%>" class="btn btn-primary edit">Editar</a>
+                    <%}%>
                     <a href="/playlist/details/<%=playlist.external_id%>" class="btn btn-success details">Ver Detalles</a>
                 </div>
             </div>
