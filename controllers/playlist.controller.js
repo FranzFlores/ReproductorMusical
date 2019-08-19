@@ -242,27 +242,48 @@ PlayListController.getPlayListAdmin = (req, res) => {
  * 
  */
 PlayListController.createPlaylistRanking = (req, res) => {
-  PlayList.create({
-    title: "Más Escuchadas",
-    description: "Las 25 canciones más escuchadas de la plataforma",
-    status: true,
-    image: 'playlist.jpg',
-    userId: req.params.user
-  }).then((playListStored) => {
-    if (playListStored) {
+  PlayList.findOne({
+    where: { title: "Más Escuchadas" }
+  }).then((playlist) => {
+    if (playlist) {
       Song.findAll({
         where: { status: true },
-        order: [['listeners', 'DESC']],
+        order: [["listeners", "DESC"]],
         limit: 25
       }).then((list) => {
-        playListStored.setSongs(list);
+        playlist.setSongs(list);
         req.flash('GOOD', 'Se ha creado correctamente la playlist ranking', "/playlist/addPlaylist");
       }).catch((err) => {
         console.log(err);
         res.status(500).send({ message: 'Error en la peticion' });
       });
     } else {
-      req.flash('OK', 'No se pudo crear la Playlist', "/playlist/addPlaylist");
+      PlayList.create({
+        title: "Más Escuchadas",
+        description: "Las 25 canciones más escuchadas de la plataforma",
+        status: true,
+        image: 'playlist.jpg',
+        userId: req.params.user
+      }).then((playListStored) => {
+        if (playListStored) {
+          Song.findAll({
+            where: { status: true },
+            order: [['listeners', 'DESC']],
+            limit: 25
+          }).then((list) => {
+            playListStored.setSongs(list);
+            req.flash('GOOD', 'Se ha creado correctamente la playlist ranking', "/playlist/addPlaylist");
+          }).catch((err) => {
+            console.log(err);
+            res.status(500).send({ message: 'Error en la peticion' });
+          });
+        } else {
+          req.flash('OK', 'No se pudo crear la Playlist', "/playlist/addPlaylist");
+        }
+      }).catch((err) => {
+        console.log(err);
+        req.flash('BAD', 'Error al guardar la Playlist', "/playlist/addPlaylist");
+      });
     }
   }).catch((err) => {
     console.log(err);

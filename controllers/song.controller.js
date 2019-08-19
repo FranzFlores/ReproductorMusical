@@ -6,23 +6,6 @@ var request = require('request');
 const { Album, Song, Artist } = require('../database');
 const SongController = {};
 
-var options = {
-  method: 'POST',
-  url: 'https://fcm.googleapis.com/fcm/send',
-  headers: {
-    'content-type': 'application/json',
-    'authorization': 'key=AAAAW_7JZIc:APA91bED_AR5yNas8XUauZAG7Zgdb94tT-mCSyJMW1IYNEU0w-UZjRCMkzKK50lxyfdru9k04Y7-1FW74IY3BAXFXDXKw6e8C0JUf2vSGVtnQYdur-5AnooX_JtNZZTrBUG-SH9FeWsl'
-  },
-  body: JSON.stringify({
-    notification: {
-      "title": "Se ha agregado una nueva canción",
-      "body": "Una nuevo canción ha sido añadida.",
-      "click action": "http://localhost:4000"
-    },
-    to: "fcD40OjPbxU:APA91bECGeJ05ezoraaufdmLXBwDiLenVITUWh12uAP7FS11G7bRlDBujFKhBU0--yb-eJdzGZhkGE08BO8Jaz613OkRhCe0CfSaP4wPNoWhsOh56mUFFnZ138aXZj9KYPlRz0yEafG1"
-  })
-};
-
 SongController.viewAddSong = (req, res) => {
   Album.findAll({
     where: { status: true },
